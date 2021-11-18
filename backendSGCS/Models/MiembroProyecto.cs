@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace backendSGCS.Models
 {
@@ -9,10 +8,10 @@ namespace backendSGCS.Models
         public int IdMiembroProyecto { get; set; }
         public int IdUsuario { get; set; }
         public int IdProyecto { get; set; }
-        public string Cargo { get; set; } = null!;
-        [JsonPropertyName("proyecto")]
+        public int IdCargo { get; set; }
+
+        public virtual Cargo IdCargoNavigation { get; set; } = null!;
         public virtual Proyecto IdProyectoNavigation { get; set; } = null!;
-        [JsonPropertyName("usuario")]
         public virtual Usuario IdUsuarioNavigation { get; set; } = null!;
     }
 }

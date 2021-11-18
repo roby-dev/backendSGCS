@@ -7,8 +7,19 @@ namespace backendSGCS.Models
 {
     public partial class dbSGCSContext : DbContext
     {
+        private static dbSGCSContext instance;
         public dbSGCSContext()
         {
+        }
+
+        public static dbSGCSContext getContext()
+        {   
+            if(instance == null)
+            {
+                instance = new dbSGCSContext();
+                return instance;
+            }
+            return instance;
         }
 
         public dbSGCSContext(DbContextOptions<dbSGCSContext> options)
@@ -16,6 +27,7 @@ namespace backendSGCS.Models
         {
         }
 
+        public virtual DbSet<Cargo> Cargos { get; set; } = null!;
         public virtual DbSet<ElementoConfiguracion> ElementoConfiguracions { get; set; } = null!;
         public virtual DbSet<Entregable> Entregables { get; set; } = null!;
         public virtual DbSet<FaseMetodologium> FaseMetodologia { get; set; } = null!;
@@ -37,6 +49,21 @@ namespace backendSGCS.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Cargo>(entity =>
+            {
+                entity.HasKey(e => e.IdCargo)
+                    .HasName("PK_CARGO");
+
+                entity.ToTable("Cargo");
+
+                entity.Property(e => e.IdCargo).HasColumnName("idCargo");
+
+                entity.Property(e => e.Nombre)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("nombre");
+            });
+
             modelBuilder.Entity<ElementoConfiguracion>(entity =>
             {
                 entity.HasKey(e => e.IdElementoConfiguracion)
@@ -207,14 +234,17 @@ namespace backendSGCS.Models
 
                 entity.Property(e => e.IdMiembroProyecto).HasColumnName("idMiembroProyecto");
 
-                entity.Property(e => e.Cargo)
-                    .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasColumnName("cargo");
+                entity.Property(e => e.IdCargo).HasColumnName("idCargo");
 
                 entity.Property(e => e.IdProyecto).HasColumnName("idProyecto");
 
                 entity.Property(e => e.IdUsuario).HasColumnName("idUsuario");
+
+                entity.HasOne(d => d.IdCargoNavigation)
+                    .WithMany(p => p.MiembroProyectos)
+                    .HasForeignKey(d => d.IdCargo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("MiembroProyecto_fk2");
 
                 entity.HasOne(d => d.IdProyectoNavigation)
                     .WithMany(p => p.MiembroProyectos)
@@ -332,10 +362,10 @@ namespace backendSGCS.Models
 
                 entity.ToTable("Usuario");
 
-                entity.HasIndex(e => e.Correo, "UQ__Usuario__2A586E0BB56D9414")
+                entity.HasIndex(e => e.Correo, "UQ__Usuario__2A586E0B51E6BA4C")
                     .IsUnique();
 
-                entity.HasIndex(e => e.Celular, "UQ__Usuario__2E4973E7150CCC10")
+                entity.HasIndex(e => e.Celular, "UQ__Usuario__2E4973E70681515B")
                     .IsUnique();
 
                 entity.Property(e => e.IdUsuario).HasColumnName("idUsuario");

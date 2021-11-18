@@ -36,7 +36,9 @@ app.MapDelete("/api/usuarios{id}", (int id) => UsuarioController.deleteUserById(
 app.MapGet("/api/miembroProyecto/{id}", (int id) => MiembroProyectoController.getMemberById(id));
 
 /// <Model>
-/// Rutas para el CRUD del modelo Metodología
+/// Rutas para el CRUD del modelo Cargo
 /// </Model>
+app.MapPost("/api/cargos", (Cargo cargo) => CargoController.createCargo(cargo));
+
 
 app.Run();

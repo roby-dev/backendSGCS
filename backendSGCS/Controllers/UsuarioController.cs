@@ -7,7 +7,7 @@ namespace backendSGCS.Controllers
 {
     public class UsuarioController
     {
-        static dbSGCSContext context = new dbSGCSContext();
+        static dbSGCSContext context = dbSGCSContext.getContext();
 
         public static Func<List<Usuario>> getUsers = () => context.Usuarios.Include("MiembroProyectos").ToList();
         public static Func<int, IResult> getUserById = (int id) =>
@@ -18,10 +18,13 @@ namespace backendSGCS.Controllers
 
         public static Func<Usuario, IResult> createUser = (Usuario _usuario) =>
         {
+            _usuario.Apellidos = _usuario.Apellidos.Trim().ToUpper();
+            _usuario.Nombres = _usuario.Nombres.Trim().ToUpper();
             context.Usuarios.Add(_usuario);
             var savedUser = context.SaveChanges();
             return savedUser != 0 ? Results.Ok(_usuario) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear usuario"));
         };
+
         public static Func<int, IResult> deleteUserById = (int id) =>
         {
             var user = context.Usuarios.Find(id);

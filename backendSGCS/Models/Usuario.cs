@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace backendSGCS.Models
@@ -16,12 +15,11 @@ namespace backendSGCS.Models
         public string Nombres { get; set; } = null!;
         public string Apellidos { get; set; } = null!;
         public string Celular { get; set; } = null!;
-        public string Correo { get; set; } = null!;
-        [JsonIgnore]
+        public string Correo { get; set; } = null!;        
         public string Clave { get; set; } = null!;
         public bool? Estado { get; set; }
-        public string Rol { get; set; } = null!;
-        [JsonIgnore]        
+        public string? Rol { get; set; } = "USUARIO";
+        [JsonIgnore]
         public virtual ICollection<MiembroProyecto> MiembroProyectos { get; set; }
     }
 }
