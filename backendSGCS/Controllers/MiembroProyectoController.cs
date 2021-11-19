@@ -9,8 +9,12 @@ namespace backendSGCS.Controllers
         static dbSGCSContext context = dbSGCSContext.getContext();
 
         public static Func<int, IResult> getMemberById = (int id) => {
-            var miembroProyecto = context.MiembroProyecto.Include("IdCargoNavigation").Include("IdProyectoNavigation").Include("IdUsuarioNavigation").Where(x => x.IdMiembroProyecto == id).First();
-            return miembroProyecto != null ? Results.Ok(miembroProyecto) : Results.NotFound();
+            try {
+                var miembroProyecto = context.MiembroProyecto.Where(x => x.IdMiembroProyecto == id).First();
+                return Results.Ok(miembroProyecto);
+            } catch (Exception) {
+                return Results.NotFound(MessageHelper.createMessage(false,"No se encontró proyecto"));
+            }            
         };
 
         public static Func<MiembroProyecto, IResult> createMember = (MiembroProyecto _member) => {
@@ -23,7 +27,7 @@ namespace backendSGCS.Controllers
             }
         };
 
-        public static Func<List<MiembroProyecto>> getMembers = () => context.MiembroProyecto.Include("IdCargoNavigation").Include("IdProyectoNavigation").Include("IdUsuarioNavigation").ToList();
+        public static Func<List<MiembroProyecto>> getMembers = () => context.MiembroProyecto.ToList();
 
         public static Func<int, IResult> deleteMember = (int id) => {
             var member = context.MiembroProyecto.Find(id);
@@ -34,6 +38,15 @@ namespace backendSGCS.Controllers
             context.SaveChanges();
             return Results.Ok(MessageHelper.createMessage(true, "Miembro proyecto borrado exitosamente"));
         };
+
+        internal static object getMembersByProject(int id) {
+            try {
+                var miembrosProyecto = context.MiembroProyecto.Where(x => x.IdProyecto == id);
+                return Results.Ok(miembrosProyecto);
+            } catch (Exception) {
+                return Results.NotFound(MessageHelper.createMessage(false, "No se encontraron miembros para este proyecto"));
+            }
+        }
 
         public static Func<int, MiembroProyecto, Task<IResult>> updateMember = async (int id, MiembroProyecto miembro) => {
             var _miembro = context.MiembroProyecto.Find(id);

@@ -1,16 +1,21 @@
 ﻿using backendSGCS.Helpers;
 using backendSGCS.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace backendSGCS.Controllers {
     public class ProyectoController {
 
         static dbSGCSContext context = dbSGCSContext.getContext();
 
-        public static Func<List<Proyecto>> getProjects = () => context.Proyecto.ToList();
+        public static Func<List<Proyecto>> getProjects = () => context.Proyecto.Include("IdMetodologiaNavigation").ToList();
 
         public static Func<int, IResult> getProjectById = (int id) => {
-            var proyecto = context.Proyecto.Find(id);
-            return proyecto != null ? Results.Ok(proyecto) : Results.NotFound(MessageHelper.createMessage(false, "No se encontró el proyecto"));
+            try {
+                var proyecto = context.Proyecto.Include("IdMetodologiaNavigation").Where(x => x.IdProyecto == id).First();
+                return Results.Ok(proyecto);
+            } catch (Exception) {
+                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el proyecto"));                
+            }           
         };
 
         public static Func<Proyecto, IResult> createProject = (Proyecto _proyecto) => {
