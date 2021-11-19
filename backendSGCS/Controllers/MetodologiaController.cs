@@ -6,31 +6,37 @@ namespace backendSGCS.Controllers
 {
     public class MetodologiaController
     {
-        static dbSGCSContext context = new dbSGCSContext();
+        static dbSGCSContext context = dbSGCSContext.getContext();
 
-        public static Func<List<Usuario>> getUsers = () => context.Usuarios.Include("MiembroProyectos").ToList();
-        public static Func<int, IResult> getUserById = (int id) =>
+        public static Func<List<Metodologium>> getMetodologias = () => context.Metodologia.ToList();
+        public static Func<int, IResult> getMetodologiaById = (int id) =>
         {
-            var usuario = context.Usuarios.Find(id);
-            return usuario != null ? Results.Ok(usuario) : Results.NotFound(MessageHelper.createMessage(false, "No se encontró el usuario"));
+            var metodologia= context.Metodologia.Find(id);
+            return metodologia != null ? Results.Ok(metodologia) : Results.NotFound(MessageHelper.createMessage(false, "No se encontró la metodología"));
         };
 
-        public static Func<Usuario, IResult> createUser = (Usuario _usuario) =>
+        public static Func<Metodologium, IResult> createMetodologia = (Metodologium _metodologia) =>
         {
-            context.Usuarios.Add(_usuario);
-            var savedUser = context.SaveChanges();
-            return savedUser != 0 ? Results.Ok(_usuario) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear usuario"));
-        };
-        public static Func<int, IResult> deleteUserById = (int id) =>
-        {
-            var user = context.Usuarios.Find(id);
-            if (user == null)
-            {
-                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el usuario"));
+            try {
+                context.Metodologia.Add(_metodologia);
+                var savedMetodologia = context.SaveChanges();
+                return savedMetodologia != 0 ? Results.Ok(savedMetodologia) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear usuario"));
+            } catch (Exception) {
+                return Results.StatusCode(500);
+                throw;
             }
-            context.Usuarios.Remove(user);
+            
+        };
+        public static Func<int, IResult> deleteMetodologia = (int id) =>
+        {
+            var metodologia = context.Metodologia.Find(id);
+            if (metodologia == null)
+            {
+                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró la metodología"));
+            }
+            context.Metodologia.Remove(metodologia);
             context.SaveChanges();
-            return Results.Ok(MessageHelper.createMessage(true, "Usuario borrado exitosamente"));
+            return Results.Ok(MessageHelper.createMessage(true, "Metodología borrado exitosamente"));
         };
     }
 }
