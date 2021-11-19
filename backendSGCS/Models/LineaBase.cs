@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace backendSGCS.Models
 {
@@ -17,6 +18,7 @@ namespace backendSGCS.Models
 
         public virtual FaseMetodologia IdFaseMetodologiaNavigation { get; set; } = null!;
         public virtual Proyecto IdProyectoNavigation { get; set; } = null!;
+        [JsonIgnore]
         public virtual ICollection<ElementoConfiguracion> ElementoConfiguracion { get; set; }
     }
 }

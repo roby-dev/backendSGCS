@@ -19,7 +19,7 @@ namespace backendSGCS.Controllers {
             Result.cantidadCargo = cantidadCargo;
             Result.cantidadElementoConfiguracion = cantidadElementoConfiguracion;
             Result.cantidadEntregable=cantidadEntregable;
-            Result.cantidadFasemetodologia = cantidadFaseMetodologia;
+            Result.cantidadFaseMetodologia = cantidadFaseMetodologia;
             Result.cantidadLineaBase = cantidadLineaBase;
             Result.cantidadMetodologia = cantidadMetodologia;
             Result.cantidadMiembroProyecto = cantidadMiembroProyecto;

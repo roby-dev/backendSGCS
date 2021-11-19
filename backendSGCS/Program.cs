@@ -80,6 +80,6 @@ app.MapPut("/api/proyectos/{id}", async ([FromRoute] int id,
 /// <Model>
 /// Rutas para los reportes
 /// </Model>
-app.MapGet("api/reportes/totales", ReportController.getAllTotal);
+app.MapGet("/api/reportes/totales", ReportController.getAllTotal);
 
 app.Run();
