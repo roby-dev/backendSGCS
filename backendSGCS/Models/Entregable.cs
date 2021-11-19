@@ -7,8 +7,8 @@ namespace backendSGCS.Models
     {
         public Entregable()
         {
-            ElementoConfiguracions = new HashSet<ElementoConfiguracion>();
-            Solicituds = new HashSet<Solicitud>();
+            ElementoConfiguracion = new HashSet<ElementoConfiguracion>();
+            Solicitud = new HashSet<Solicitud>();
         }
 
         public int IdEntregable { get; set; }
@@ -19,8 +19,8 @@ namespace backendSGCS.Models
         public string FechaFin { get; set; } = null!;
         public bool? Estado { get; set; }
 
-        public virtual FaseMetodologium IdFaseMetodologiaNavigation { get; set; } = null!;
-        public virtual ICollection<ElementoConfiguracion> ElementoConfiguracions { get; set; }
-        public virtual ICollection<Solicitud> Solicituds { get; set; }
+        public virtual FaseMetodologia IdFaseMetodologiaNavigation { get; set; } = null!;
+        public virtual ICollection<ElementoConfiguracion> ElementoConfiguracion { get; set; }
+        public virtual ICollection<Solicitud> Solicitud { get; set; }
     }
 }

@@ -7,15 +7,13 @@ namespace backendSGCS.Models
 {
     public partial class dbSGCSContext : DbContext
     {
-        private static dbSGCSContext instance;
+        private static dbSGCSContext? instance;
         public dbSGCSContext()
         {
         }
 
-        public static dbSGCSContext getContext()
-        {   
-            if(instance == null)
-            {
+        public static dbSGCSContext getContext() {
+            if (instance == null) {
                 instance = new dbSGCSContext();
                 return instance;
             }
@@ -27,16 +25,16 @@ namespace backendSGCS.Models
         {
         }
 
-        public virtual DbSet<Cargo> Cargos { get; set; } = null!;
-        public virtual DbSet<ElementoConfiguracion> ElementoConfiguracions { get; set; } = null!;
-        public virtual DbSet<Entregable> Entregables { get; set; } = null!;
-        public virtual DbSet<FaseMetodologium> FaseMetodologia { get; set; } = null!;
-        public virtual DbSet<LineaBase> LineaBases { get; set; } = null!;
-        public virtual DbSet<Metodologium> Metodologia { get; set; } = null!;
-        public virtual DbSet<MiembroProyecto> MiembroProyectos { get; set; } = null!;
-        public virtual DbSet<Proyecto> Proyectos { get; set; } = null!;
-        public virtual DbSet<Solicitud> Solicituds { get; set; } = null!;
-        public virtual DbSet<Usuario> Usuarios { get; set; } = null!;
+        public virtual DbSet<Cargo> Cargo { get; set; } = null!;
+        public virtual DbSet<ElementoConfiguracion> ElementoConfiguracion { get; set; } = null!;
+        public virtual DbSet<Entregable> Entregable { get; set; } = null!;
+        public virtual DbSet<FaseMetodologia> FaseMetodologia { get; set; } = null!;
+        public virtual DbSet<LineaBase> LineaBase { get; set; } = null!;
+        public virtual DbSet<Metodologia> Metodologia { get; set; } = null!;
+        public virtual DbSet<MiembroProyecto> MiembroProyecto { get; set; } = null!;
+        public virtual DbSet<Proyecto> Proyecto { get; set; } = null!;
+        public virtual DbSet<Solicitud> Solicitud { get; set; } = null!;
+        public virtual DbSet<Usuario> Usuario { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -54,8 +52,6 @@ namespace backendSGCS.Models
                 entity.HasKey(e => e.IdCargo)
                     .HasName("PK_CARGO");
 
-                entity.ToTable("Cargo");
-
                 entity.Property(e => e.IdCargo).HasColumnName("idCargo");
 
                 entity.Property(e => e.Nombre)
@@ -68,8 +64,6 @@ namespace backendSGCS.Models
             {
                 entity.HasKey(e => e.IdElementoConfiguracion)
                     .HasName("PK_ELEMENTOCONFIGURACION");
-
-                entity.ToTable("ElementoConfiguracion");
 
                 entity.Property(e => e.IdElementoConfiguracion).HasColumnName("idElementoConfiguracion");
 
@@ -90,19 +84,19 @@ namespace backendSGCS.Models
                     .HasColumnName("nombre");
 
                 entity.HasOne(d => d.IdEntregableNavigation)
-                    .WithMany(p => p.ElementoConfiguracions)
+                    .WithMany(p => p.ElementoConfiguracion)
                     .HasForeignKey(d => d.IdEntregable)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("ElementoConfiguracion_fk2");
 
                 entity.HasOne(d => d.IdLineaBaseNavigation)
-                    .WithMany(p => p.ElementoConfiguracions)
+                    .WithMany(p => p.ElementoConfiguracion)
                     .HasForeignKey(d => d.IdLineaBase)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("ElementoConfiguracion_fk1");
 
                 entity.HasOne(d => d.IdProyectoNavigation)
-                    .WithMany(p => p.ElementoConfiguracions)
+                    .WithMany(p => p.ElementoConfiguracion)
                     .HasForeignKey(d => d.IdProyecto)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("ElementoConfiguracion_fk0");
@@ -112,8 +106,6 @@ namespace backendSGCS.Models
             {
                 entity.HasKey(e => e.IdEntregable)
                     .HasName("PK_ENTREGABLE");
-
-                entity.ToTable("Entregable");
 
                 entity.Property(e => e.IdEntregable).HasColumnName("idEntregable");
 
@@ -145,13 +137,13 @@ namespace backendSGCS.Models
                     .HasColumnName("nomenclatura");
 
                 entity.HasOne(d => d.IdFaseMetodologiaNavigation)
-                    .WithMany(p => p.Entregables)
+                    .WithMany(p => p.Entregable)
                     .HasForeignKey(d => d.IdFaseMetodologia)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Entregable_fk0");
             });
 
-            modelBuilder.Entity<FaseMetodologium>(entity =>
+            modelBuilder.Entity<FaseMetodologia>(entity =>
             {
                 entity.HasKey(e => e.IdFaseMetodologia)
                     .HasName("PK_FASEMETODOLOGIA");
@@ -182,8 +174,6 @@ namespace backendSGCS.Models
                 entity.HasKey(e => e.IdLineaBase)
                     .HasName("PK_LINEABASE");
 
-                entity.ToTable("LineaBase");
-
                 entity.Property(e => e.IdLineaBase).HasColumnName("idLineaBase");
 
                 entity.Property(e => e.Fecha)
@@ -195,19 +185,19 @@ namespace backendSGCS.Models
                 entity.Property(e => e.IdProyecto).HasColumnName("idProyecto");
 
                 entity.HasOne(d => d.IdFaseMetodologiaNavigation)
-                    .WithMany(p => p.LineaBases)
+                    .WithMany(p => p.LineaBase)
                     .HasForeignKey(d => d.IdFaseMetodologia)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("LineaBase_fk1");
 
                 entity.HasOne(d => d.IdProyectoNavigation)
-                    .WithMany(p => p.LineaBases)
+                    .WithMany(p => p.LineaBase)
                     .HasForeignKey(d => d.IdProyecto)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("LineaBase_fk0");
             });
 
-            modelBuilder.Entity<Metodologium>(entity =>
+            modelBuilder.Entity<Metodologia>(entity =>
             {
                 entity.HasKey(e => e.IdMetodologia)
                     .HasName("PK_METODOLOGIA");
@@ -230,8 +220,6 @@ namespace backendSGCS.Models
                 entity.HasKey(e => e.IdMiembroProyecto)
                     .HasName("PK_MIEMBROPROYECTO");
 
-                entity.ToTable("MiembroProyecto");
-
                 entity.Property(e => e.IdMiembroProyecto).HasColumnName("idMiembroProyecto");
 
                 entity.Property(e => e.IdCargo).HasColumnName("idCargo");
@@ -241,19 +229,19 @@ namespace backendSGCS.Models
                 entity.Property(e => e.IdUsuario).HasColumnName("idUsuario");
 
                 entity.HasOne(d => d.IdCargoNavigation)
-                    .WithMany(p => p.MiembroProyectos)
+                    .WithMany(p => p.MiembroProyecto)
                     .HasForeignKey(d => d.IdCargo)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("MiembroProyecto_fk2");
 
                 entity.HasOne(d => d.IdProyectoNavigation)
-                    .WithMany(p => p.MiembroProyectos)
+                    .WithMany(p => p.MiembroProyecto)
                     .HasForeignKey(d => d.IdProyecto)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("MiembroProyecto_fk1");
 
                 entity.HasOne(d => d.IdUsuarioNavigation)
-                    .WithMany(p => p.MiembroProyectos)
+                    .WithMany(p => p.MiembroProyecto)
                     .HasForeignKey(d => d.IdUsuario)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("MiembroProyecto_fk0");
@@ -263,8 +251,6 @@ namespace backendSGCS.Models
             {
                 entity.HasKey(e => e.IdProyecto)
                     .HasName("PK_PROYECTO");
-
-                entity.ToTable("Proyecto");
 
                 entity.Property(e => e.IdProyecto).HasColumnName("idProyecto");
 
@@ -279,11 +265,13 @@ namespace backendSGCS.Models
                     .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.FechaFin)
-                    .HasColumnType("date")
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
                     .HasColumnName("fechaFin");
 
                 entity.Property(e => e.FechaInicio)
-                    .HasColumnType("date")
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
                     .HasColumnName("fechaInicio");
 
                 entity.Property(e => e.IdMetodologia).HasColumnName("idMetodologia");
@@ -294,7 +282,7 @@ namespace backendSGCS.Models
                     .HasColumnName("nombre");
 
                 entity.HasOne(d => d.IdMetodologiaNavigation)
-                    .WithMany(p => p.Proyectos)
+                    .WithMany(p => p.Proyecto)
                     .HasForeignKey(d => d.IdMetodologia)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Proyecto_fk0");
@@ -304,8 +292,6 @@ namespace backendSGCS.Models
             {
                 entity.HasKey(e => e.IdSolicitud)
                     .HasName("PK_SOLICITUD");
-
-                entity.ToTable("Solicitud");
 
                 entity.Property(e => e.IdSolicitud).HasColumnName("idSolicitud");
 
@@ -343,13 +329,13 @@ namespace backendSGCS.Models
                     .HasColumnName("solicitante");
 
                 entity.HasOne(d => d.IdEntregableNavigation)
-                    .WithMany(p => p.Solicituds)
+                    .WithMany(p => p.Solicitud)
                     .HasForeignKey(d => d.IdEntregable)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Solicitud_fk1");
 
                 entity.HasOne(d => d.IdProyectoNavigation)
-                    .WithMany(p => p.Solicituds)
+                    .WithMany(p => p.Solicitud)
                     .HasForeignKey(d => d.IdProyecto)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Solicitud_fk0");
@@ -360,12 +346,10 @@ namespace backendSGCS.Models
                 entity.HasKey(e => e.IdUsuario)
                     .HasName("PK_USUARIO");
 
-                entity.ToTable("Usuario");
-
-                entity.HasIndex(e => e.Correo, "UQ__Usuario__2A586E0B51E6BA4C")
+                entity.HasIndex(e => e.Correo, "UQ__Usuario__2A586E0B7665E6C4")
                     .IsUnique();
 
-                entity.HasIndex(e => e.Celular, "UQ__Usuario__2E4973E70681515B")
+                entity.HasIndex(e => e.Celular, "UQ__Usuario__2E4973E7399CC44D")
                     .IsUnique();
 
                 entity.Property(e => e.IdUsuario).HasColumnName("idUsuario");

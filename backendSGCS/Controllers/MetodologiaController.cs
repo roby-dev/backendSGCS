@@ -8,30 +8,26 @@ namespace backendSGCS.Controllers
     {
         static dbSGCSContext context = dbSGCSContext.getContext();
 
-        public static Func<List<Metodologium>> getMetodologias = () => context.Metodologia.ToList();
-        public static Func<int, IResult> getMetodologiaById = (int id) =>
-        {
-            var metodologia= context.Metodologia.Find(id);
+        public static Func<List<Metodologia>> getMetodologias = () => context.Metodologia.ToList();
+        public static Func<int, IResult> getMetodologiaById = (int id) => {
+            var metodologia = context.Metodologia.Find(id);
             return metodologia != null ? Results.Ok(metodologia) : Results.NotFound(MessageHelper.createMessage(false, "No se encontró la metodología"));
         };
 
-        public static Func<Metodologium, IResult> createMetodologia = (Metodologium _metodologia) =>
-        {
+        public static Func<Metodologia, IResult> createMetodologia = (Metodologia _metodologia) => {
             try {
                 context.Metodologia.Add(_metodologia);
                 var savedMetodologia = context.SaveChanges();
-                return savedMetodologia != 0 ? Results.Ok(savedMetodologia) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear usuario"));
+                return savedMetodologia != 0 ? Results.Ok(_metodologia) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear usuario"));
             } catch (Exception) {
                 return Results.StatusCode(500);
                 throw;
             }
-            
+
         };
-        public static Func<int, IResult> deleteMetodologia = (int id) =>
-        {
+        public static Func<int, IResult> deleteMetodologia = (int id) => {
             var metodologia = context.Metodologia.Find(id);
-            if (metodologia == null)
-            {
+            if (metodologia == null) {
                 return Results.NotFound(MessageHelper.createMessage(false, "No se encontró la metodología"));
             }
             context.Metodologia.Remove(metodologia);

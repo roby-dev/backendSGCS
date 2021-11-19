@@ -8,12 +8,12 @@ namespace backendSGCS.Models
     {
         public Cargo()
         {
-            MiembroProyectos = new HashSet<MiembroProyecto>();
+            MiembroProyecto = new HashSet<MiembroProyecto>();
         }
 
         public int IdCargo { get; set; }
         public string Nombre { get; set; } = null!;
         [JsonIgnore]
-        public virtual ICollection<MiembroProyecto> MiembroProyectos { get; set; }
+        public virtual ICollection<MiembroProyecto> MiembroProyecto { get; set; }
     }
 }

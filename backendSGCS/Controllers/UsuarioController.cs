@@ -8,9 +8,9 @@ namespace backendSGCS.Controllers
     public class UsuarioController {
         static dbSGCSContext context = dbSGCSContext.getContext();
 
-        public static Func<List<Usuario>> getUsers = () => context.Usuarios.Include("MiembroProyectos").ToList();
+        public static Func<List<Usuario>> getUsers = () => context.Usuario.ToList();
         public static Func<int, IResult> getUserById = (int id) => {
-            var usuario = context.Usuarios.Find(id);
+            var usuario = context.Usuario.Find(id);
             return usuario != null ? Results.Ok(usuario) : Results.NotFound(MessageHelper.createMessage(false, "No se encontró el usuario"));
         };
 
@@ -18,7 +18,7 @@ namespace backendSGCS.Controllers
             _usuario.Apellidos = _usuario.Apellidos.Trim().ToUpper();
             _usuario.Nombres = _usuario.Nombres.Trim().ToUpper();
             try {
-                context.Usuarios.Add(_usuario);
+                context.Usuario.Add(_usuario);
                 var savedUser = context.SaveChanges();
                 return savedUser != 0 ? Results.Ok(_usuario) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear usuario"));
             } catch (Exception) {
@@ -26,18 +26,43 @@ namespace backendSGCS.Controllers
             }
         };
 
-        //public static Func<int,Usuario, IResult> updateUser = (int id, Usuario usuario) => {
-
-        //};
-
-        public static Func<int, IResult> deleteUser = (int id) =>
-        {
-            var user = context.Usuarios.Find(id);
-            if (user == null)
-            {
+        public static Func<int, Usuario, Task<IResult>> updateUser = async (int id, Usuario usuario) => {
+            var _usuario = context.Usuario.Find(id);
+            if (_usuario == null) {
                 return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el usuario"));
             }
-            context.Usuarios.Remove(user);
+            try {
+                usuario.Clave = _usuario.Clave;
+                usuario.Nombres = usuario.Nombres.Trim().ToUpper();
+                usuario.Apellidos = usuario.Apellidos.Trim().ToUpper();
+                context.Entry(_usuario).CurrentValues.SetValues(usuario);
+                await context.SaveChangesAsync();
+                return Results.Ok(_usuario);
+            } catch (Exception e) {
+                return Results.NotFound(e);
+            }            
+        };
+
+        public static Func<int, Usuario, Task<IResult>> changePassword = async (int id, Usuario usuario) => {
+            var _usuario = context.Usuario.Find(id);
+            if (_usuario == null) {
+                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el usuario"));
+            }
+            try {                         
+                context.Entry(_usuario).CurrentValues.SetValues(usuario);
+                await context.SaveChangesAsync();
+                return Results.Ok(_usuario);
+            } catch (Exception e) {
+                return Results.NotFound(e);
+            }
+        };
+
+        public static Func<int, IResult> deleteUser = (int id) => {
+            var user = context.Usuario.Find(id);
+            if (user == null) {
+                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el usuario"));
+            }
+            context.Usuario.Remove(user);
             context.SaveChanges();
             return Results.Ok(MessageHelper.createMessage(true, "Usuario borrado exitosamente"));
         };

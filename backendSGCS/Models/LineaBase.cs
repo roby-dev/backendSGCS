@@ -7,7 +7,7 @@ namespace backendSGCS.Models
     {
         public LineaBase()
         {
-            ElementoConfiguracions = new HashSet<ElementoConfiguracion>();
+            ElementoConfiguracion = new HashSet<ElementoConfiguracion>();
         }
 
         public int IdLineaBase { get; set; }
@@ -15,8 +15,8 @@ namespace backendSGCS.Models
         public int IdFaseMetodologia { get; set; }
         public DateTime Fecha { get; set; }
 
-        public virtual FaseMetodologium IdFaseMetodologiaNavigation { get; set; } = null!;
+        public virtual FaseMetodologia IdFaseMetodologiaNavigation { get; set; } = null!;
         public virtual Proyecto IdProyectoNavigation { get; set; } = null!;
-        public virtual ICollection<ElementoConfiguracion> ElementoConfiguracions { get; set; }
+        public virtual ICollection<ElementoConfiguracion> ElementoConfiguracion { get; set; }
     }
 }

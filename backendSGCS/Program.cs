@@ -1,6 +1,6 @@
 using backendSGCS.Controllers;
 using backendSGCS.Models;
-using Microsoft.AspNetCore.Http.Json;
+using Microsoft.AspNetCore.Mvc;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +9,7 @@ builder.Services.AddDbContextFactory<dbSGCSContext>();
 builder.Services.AddTransient<UsuarioController>();
 builder.Services.Configure<JsonOptions>(options =>
 {
-    options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
 builder.Services.AddSwaggerGen();
 
@@ -22,17 +22,18 @@ app.UseSwaggerUI();
 /// </Default>
 app.MapGet("/", () => Results.LocalRedirect("~/swagger/index.html"));
 
-/// <Model>
+/// < Model >
 /// Rutas para el CRUD del modelo Usuario
 /// </Model>
 app.MapGet("/api/usuarios", UsuarioController.getUsers);
 app.MapGet("/api/usuarios/{id}", (int id) => UsuarioController.getUserById(id));
 app.MapPost("/api/usuarios", (Usuario usuario) => UsuarioController.createUser(usuario));
-//app.MapPut("/api/usuarios/{id}",( [FromRoute] int id,
-//    [FromBody]
-                                            
-//    ))
 app.MapDelete("/api/usuarios/{id}", (int id) => UsuarioController.deleteUser(id));
+app.MapPut("/api/usuarios/{id}", async ([FromRoute] int id,
+                                        [FromBody] Usuario _usuario) => await UsuarioController.updateUser(id, _usuario));
+
+app.MapPut("/api/usuarios/cambiarClave/{id}", async ([FromRoute] int id,
+                                        [FromBody] Usuario _usuario) => await UsuarioController.changePassword(id, _usuario));
 
 /// <Model>
 /// Rutas para el CRUD del modelo MiembroProyecto
@@ -41,6 +42,8 @@ app.MapGet("/api/miembros", MiembroProyectoController.getMembers);
 app.MapGet("/api/miembros/{id}", (int id) => MiembroProyectoController.getMemberById(id));
 app.MapPost("/api/miembros", (MiembroProyecto _miembro) => MiembroProyectoController.createMember(_miembro));
 app.MapDelete("/api/miembros/{id}", (int id) => MiembroProyectoController.deleteMember(id));
+app.MapPut("/api/miembros/{id}", async ([FromRoute] int id,
+                                        [FromBody] MiembroProyecto _miembro) => await MiembroProyectoController.updateMember(id, _miembro));
 
 /// <Model>
 /// Rutas para el CRUD del modelo Cargo
@@ -49,13 +52,15 @@ app.MapGet("/api/cargos", CargoController.getCargos);
 app.MapGet("/api/cargos/{id}", (int id) => CargoController.getCargoById(id));
 app.MapPost("/api/cargos", (Cargo usuario) => CargoController.createCargo(usuario));
 app.MapDelete("/api/cargos/{id}", (int id) => CargoController.deleteCargo(id));
+app.MapPut("/api/cargos/{id}", async ([FromRoute] int id,
+                                        [FromBody] Cargo _cargo) => await CargoController.updateCargo(id, _cargo));
 
 /// <Model>
 /// Rutas para el CRUD del modelo Metodologia
 /// </Model>
 app.MapGet("/api/metodologias", MetodologiaController.getMetodologias);
 app.MapGet("/api/metodologias/{id}", (int id) => MetodologiaController.getMetodologiaById(id));
-app.MapPost("/api/metodologias", (Metodologium metodologia) => MetodologiaController.createMetodologia(metodologia));
+app.MapPost("/api/metodologias", (Metodologia metodologia) => MetodologiaController.createMetodologia(metodologia));
 app.MapDelete("/api/metodologias/{id}", (int id) => MetodologiaController.deleteMetodologia(id));
 
 app.Run();
