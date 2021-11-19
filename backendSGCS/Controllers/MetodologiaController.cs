@@ -34,5 +34,19 @@ namespace backendSGCS.Controllers
             context.SaveChanges();
             return Results.Ok(MessageHelper.createMessage(true, "Metodología borrado exitosamente"));
         };
+
+        public static Func<int, Metodologia, Task<IResult>> updateMetodologia = async (int id, Metodologia metodologia) => {
+            var _metodologia = context.Metodologia.Find(id);
+            if (_metodologia == null) {
+                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el metodología"));
+            }
+            try {
+                context.Entry(_metodologia).CurrentValues.SetValues(metodologia);
+                await context.SaveChangesAsync();
+                return Results.Ok(_metodologia);
+            } catch (Exception e) {
+                return Results.NotFound(e);
+            }
+        };
     }
 }

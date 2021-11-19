@@ -9,7 +9,7 @@ namespace backendSGCS.Controllers
         static dbSGCSContext context = dbSGCSContext.getContext();
 
         public static Func<int, IResult> getMemberById = (int id) => {
-            var miembroProyecto = context.MiembroProyecto.Include("cargo").Include("proyecto").Include("usuario").Where(x => x.IdMiembroProyecto == id).First();
+            var miembroProyecto = context.MiembroProyecto.Include("IdCargoNavigation").Include("IdProyectoNavigation").Include("IdUsuarioNavigation").Where(x => x.IdMiembroProyecto == id).First();
             return miembroProyecto != null ? Results.Ok(miembroProyecto) : Results.NotFound();
         };
 
@@ -23,7 +23,7 @@ namespace backendSGCS.Controllers
             }
         };
 
-        public static Func<List<MiembroProyecto>> getMembers = () => context.MiembroProyecto.ToList();
+        public static Func<List<MiembroProyecto>> getMembers = () => context.MiembroProyecto.Include("IdCargoNavigation").Include("IdProyectoNavigation").Include("IdUsuarioNavigation").ToList();
 
         public static Func<int, IResult> deleteMember = (int id) => {
             var member = context.MiembroProyecto.Find(id);
@@ -42,7 +42,7 @@ namespace backendSGCS.Controllers
             }
             try {
                 context.Entry(_miembro).CurrentValues.SetValues(miembro);
-                context.SaveChanges();
+                await context.SaveChangesAsync();
                 return Results.Ok(_miembro);
             } catch (Exception e) {
                 return Results.NotFound(e);

@@ -48,7 +48,9 @@ namespace backendSGCS.Controllers
             if (_usuario == null) {
                 return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el usuario"));
             }
-            try {                         
+            try {
+                _usuario.Clave = usuario.Clave;
+                usuario = _usuario;
                 context.Entry(_usuario).CurrentValues.SetValues(usuario);
                 await context.SaveChangesAsync();
                 return Results.Ok(_usuario);

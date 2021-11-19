@@ -62,5 +62,17 @@ app.MapGet("/api/metodologias", MetodologiaController.getMetodologias);
 app.MapGet("/api/metodologias/{id}", (int id) => MetodologiaController.getMetodologiaById(id));
 app.MapPost("/api/metodologias", (Metodologia metodologia) => MetodologiaController.createMetodologia(metodologia));
 app.MapDelete("/api/metodologias/{id}", (int id) => MetodologiaController.deleteMetodologia(id));
+app.MapPut("/api/metodologias/{id}", async ([FromRoute] int id,
+                                        [FromBody] Metodologia _metodologia) => await MetodologiaController.updateMetodologia(id, _metodologia));
+
+/// <Model>
+/// Rutas para el CRUD del modelo Proyecto
+/// </Model>
+app.MapGet("/api/proyectos", ProyectoController.getProjects);
+app.MapGet("/api/proyectos/{id}", (int id) => ProyectoController.getProjectById(id));
+app.MapPost("/api/proyectos", (Proyecto _proyecto) => ProyectoController.createProject(_proyecto));
+app.MapDelete("/api/proyectos/{id}", (int id) => ProyectoController.deleteProject(id));
+app.MapPut("/api/proyectos/{id}", async ([FromRoute] int id,
+                                        [FromBody] Proyecto _proyecto) => await ProyectoController.updateProject(id, _proyecto));
 
 app.Run();
