@@ -5,30 +5,18 @@ namespace backendSGCS.Controllers {
         static dbSGCSContext context = dbSGCSContext.getContext();
 
         public static Func<IResult> getAllTotal = () => {
-            var cantidadCargo = context.Cargo.ToList().Count;
-            var cantidadElementoConfiguracion = context.ElementoConfiguracion.ToList().Count;
-            var cantidadEntregable = context.Entregable.ToList().Count;
-            var cantidadFaseMetodologia = context.FaseMetodologia.ToList().Count;
-            var cantidadLineaBase = context.LineaBase.ToList().Count;
-            var cantidadMetodologia = context.Metodologia.ToList().Count;
-            var cantidadMiembroProyecto = context.MiembroProyecto.ToList().Count;
-            var cantidadProyecto = context.Proyecto.ToList().Count;
-            var cantidadSolicitud = context.Solicitud.ToList().Count;
-            var cantidadUsuario = context.Usuario.ToList().Count;
             dynamic Result = new System.Dynamic.ExpandoObject();
-            Result.cantidadCargo = cantidadCargo;
-            Result.cantidadElementoConfiguracion = cantidadElementoConfiguracion;
-            Result.cantidadEntregable=cantidadEntregable;
-            Result.cantidadFaseMetodologia = cantidadFaseMetodologia;
-            Result.cantidadLineaBase = cantidadLineaBase;
-            Result.cantidadMetodologia = cantidadMetodologia;
-            Result.cantidadMiembroProyecto = cantidadMiembroProyecto;
-            Result.cantidadProyecto = cantidadProyecto;
-            Result.cantidadSolicitud = cantidadSolicitud;
-            Result.cantidadUsuario = cantidadUsuario;
-
-            return Results.Ok(Result);
-            //return savedCargo != 0 ? Results.Ok(_cargo) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear cargo"));
+            Result.cantidadCargo = context.Cargo.ToList().Count;
+            Result.cantidadElementoConfiguracion = context.ElementoConfiguracion.ToList().Count;
+            Result.cantidadEntregable = context.Entregable.ToList().Count;
+            Result.cantidadFaseMetodologia = context.FaseMetodologia.ToList().Count;
+            Result.cantidadLineaBase = context.LineaBase.ToList().Count;
+            Result.cantidadMetodologia = context.Metodologia.ToList().Count;
+            Result.cantidadMiembroProyecto = context.MiembroProyecto.ToList().Count;
+            Result.cantidadProyecto = context.Proyecto.ToList().Count;
+            Result.cantidadSolicitud = context.Solicitud.ToList().Count;
+            Result.cantidadUsuario = context.Usuario.ToList().Count;
+            return Results.Ok(Result);            
         };
     }
 }
