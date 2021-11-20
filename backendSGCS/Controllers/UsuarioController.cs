@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace backendSGCS.Controllers
 {
     public class UsuarioController {
-        static dbSGCSContext context = dbSGCSContext.getContext();
+        static dbSGCSContext context = new dbSGCSContext();
 
         public static Func<List<Usuario>> getUsers = () => context.Usuario.ToList();
         public static Func<int, IResult> getUserById = (int id) => {

@@ -6,7 +6,7 @@ namespace backendSGCS.Controllers
 {
     public class MiembroProyectoController
     {
-        static dbSGCSContext context = dbSGCSContext.getContext();
+        static dbSGCSContext context = new dbSGCSContext();
 
         public static Func<int, IResult> getMemberById = (int id) => {
             try {

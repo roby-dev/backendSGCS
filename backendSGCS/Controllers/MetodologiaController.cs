@@ -6,7 +6,7 @@ namespace backendSGCS.Controllers
 {
     public class MetodologiaController
     {
-        static dbSGCSContext context = dbSGCSContext.getContext();
+        static dbSGCSContext context = new dbSGCSContext();
 
         public static Func<List<Metodologia>> getMetodologias = () => context.Metodologia.ToList();
         public static Func<int, IResult> getMetodologiaById = (int id) => {

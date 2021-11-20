@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace backendSGCS.Controllers {
     public class ProyectoController {
 
-        static dbSGCSContext context = dbSGCSContext.getContext();
+        static dbSGCSContext context = new dbSGCSContext();
 
         public static Func<List<Proyecto>> getProjects = () => context.Proyecto.Include("IdMetodologiaNavigation").ToList();
 

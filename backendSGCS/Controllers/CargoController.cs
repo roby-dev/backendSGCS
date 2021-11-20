@@ -5,7 +5,7 @@ namespace backendSGCS.Controllers
 {
     public class CargoController
     {
-        static dbSGCSContext context = dbSGCSContext.getContext();
+        static dbSGCSContext context = new dbSGCSContext();
 
         public static Func<Cargo, IResult> createCargo = (Cargo _cargo) => {
             context.Cargo.Add(_cargo);
