@@ -16,7 +16,9 @@ namespace backendSGCS.Models
         public int IdFaseMetodologia { get; set; }
         public DateTime Fecha { get; set; }
 
-        public virtual FaseMetodologia IdFaseMetodologiaNavigation { get; set; } = null!;
+        [JsonPropertyName("faseMetodologia")]
+        public virtual FaseMetodologia? IdFaseMetodologiaNavigation { get; set; } = null!;
+        [JsonPropertyName("proyecto")]
         public virtual Proyecto IdProyectoNavigation { get; set; } = null!;
         [JsonIgnore]
         public virtual ICollection<ElementoConfiguracion> ElementoConfiguracion { get; set; }

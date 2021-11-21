@@ -19,7 +19,7 @@ namespace backendSGCS.Models
         public string FechaInicio { get; set; } = null!;
         public string FechaFin { get; set; } = null!;
         public bool? Estado { get; set; }
-
+        [JsonPropertyName("metodologia")]
         public virtual FaseMetodologia IdFaseMetodologiaNavigation { get; set; } = null!;
         [JsonIgnore]
         public virtual ICollection<ElementoConfiguracion> ElementoConfiguracion { get; set; }

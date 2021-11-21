@@ -16,7 +16,7 @@ namespace backendSGCS.Models
         public int IdMetodologia { get; set; }
         public string Nombre { get; set; } = null!;
         public bool? Estado { get; set; }
-
+        [JsonPropertyName("metodologia")]
         public virtual Metodologia IdMetodologiaNavigation { get; set; } = null!;
         [JsonIgnore]
         public virtual ICollection<Entregable> Entregable { get; set; }

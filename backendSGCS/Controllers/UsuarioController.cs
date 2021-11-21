@@ -14,14 +14,10 @@ namespace backendSGCS.Controllers
             return usuario != null ? Results.Ok(usuario) : Results.NotFound(MessageHelper.createMessage(false, "No se encontró el usuario"));
         };
 
-        public static Func<Usuario, IResult> createUser = (Usuario _usuario) => {
-            
-
+        public static Func<Usuario, IResult> createUser = (Usuario _usuario) => {  
             _usuario.Apellidos = ToUpperFirstLetter(_usuario.Apellidos.Trim());
             _usuario.Nombres = ToUpperFirstLetter(_usuario.Nombres.Trim());
-
-            string passwordHash = BCrypt.Net.BCrypt.HashPassword(_usuario.Clave);
-            _usuario.Clave = passwordHash;
+            _usuario.Clave = BCrypt.Net.BCrypt.HashPassword(_usuario.Clave);             
             try {
                 context.Usuario.Add(_usuario);
                 var savedUser = context.SaveChanges();
@@ -54,7 +50,7 @@ namespace backendSGCS.Controllers
                 return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el usuario"));
             }
             try {
-                _usuario.Clave = usuario.Clave;
+                _usuario.Clave = BCrypt.Net.BCrypt.HashPassword(usuario.Clave);
                 usuario = _usuario;
                 context.Entry(_usuario).CurrentValues.SetValues(usuario);
                 await context.SaveChangesAsync();
@@ -74,19 +70,13 @@ namespace backendSGCS.Controllers
             return Results.Ok(MessageHelper.createMessage(true, "Usuario borrado exitosamente"));
         };
 
-
-
         public static string ToUpperFirstLetter(string source)
         {
-
             source = source.ToLower();
-
             string[] words = source.Split(' ');
             string final = "";
-
             foreach (string item in words)
             {
-
                 char[] letters = item.ToCharArray();
                 letters[0] = char.ToUpper(letters[0]);
                 foreach (char letter in letters)
@@ -95,10 +85,7 @@ namespace backendSGCS.Controllers
                 }
                 final = final + " ";
             }
-
             return final;
         }
     }
-
-
 }

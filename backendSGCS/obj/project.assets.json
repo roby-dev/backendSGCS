@@ -2261,11 +2261,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Universidad\\UPT_2021-II\\GESTION CONF\\Proyecto\\backendSGCS-crispin\\backendSGCS\\backendSGCS.csproj",
+      "projectUniqueName": "C:\\Users\\ROBY\\source\\repos\\backendSGCS\\backendSGCS\\backendSGCS.csproj",
       "projectName": "backendSGCS",
-      "projectPath": "E:\\Universidad\\UPT_2021-II\\GESTION CONF\\Proyecto\\backendSGCS-crispin\\backendSGCS\\backendSGCS.csproj",
+      "projectPath": "C:\\Users\\ROBY\\source\\repos\\backendSGCS\\backendSGCS\\backendSGCS.csproj",
       "packagesPath": "C:\\Users\\ROBY\\.nuget\\packages\\",
-      "outputPath": "E:\\Universidad\\UPT_2021-II\\GESTION CONF\\Proyecto\\backendSGCS-crispin\\backendSGCS\\obj\\",
+      "outputPath": "C:\\Users\\ROBY\\source\\repos\\backendSGCS\\backendSGCS\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",

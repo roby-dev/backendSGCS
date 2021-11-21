@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Fia0/wVyrvKyroSszzChAfKZW71jVSI8DS/yUNT4z82nbKxOIrsT1ibGvKI3rp7SSSW9jeAf0pw1vSH/oDSq4Q==",
+  "dgSpecHash": "ixIrKJmXiezgtCA++JNtK3mLMJ9LkvbFcWlLYj9QNK9eUuJZJFnP4z378Q4w9ZVzteiFweVJNCZ9BkxTkqvHzA==",
   "success": true,
-  "projectFilePath": "E:\\Universidad\\UPT_2021-II\\GESTION CONF\\Proyecto\\backendSGCS-crispin\\backendSGCS\\backendSGCS.csproj",
+  "projectFilePath": "C:\\Users\\ROBY\\source\\repos\\backendSGCS\\backendSGCS\\backendSGCS.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ROBY\\.nuget\\packages\\bcrypt.net-next\\4.0.2\\bcrypt.net-next.4.0.2.nupkg.sha512",
     "C:\\Users\\ROBY\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",

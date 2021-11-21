@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace backendSGCS.Models
 {
@@ -14,8 +15,9 @@ namespace backendSGCS.Models
         public string Objetivo { get; set; } = null!;
         public int IdEntregable { get; set; }
         public string Respuesta { get; set; } = null!;
-
+        [JsonPropertyName("entregable")]
         public virtual Entregable IdEntregableNavigation { get; set; } = null!;
+        [JsonPropertyName("proyecto")]
         public virtual Proyecto IdProyectoNavigation { get; set; } = null!;
     }
 }
