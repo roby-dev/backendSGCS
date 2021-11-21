@@ -10,7 +10,7 @@ namespace backendSGCS.Controllers
         public static Func<Cargo, IResult> createCargo = (Cargo _cargo) => {
             context.Cargo.Add(_cargo);
             var savedCargo = context.SaveChanges();
-            return savedCargo != 0 ? Results.Ok(_cargo) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear cargo"));
+            return savedCargo != 0 ? Results.Ok(_cargo) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear el cargo"));
         };
         public static Func<List<Cargo>> getCargos = () => context.Cargo.ToList();
         public static Func<int, IResult> getCargoById = (int id) => {

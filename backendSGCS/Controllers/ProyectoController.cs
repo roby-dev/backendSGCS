@@ -22,7 +22,7 @@ namespace backendSGCS.Controllers {
             try {
                 context.Proyecto.Add(_proyecto);
                 var savedProject = context.SaveChanges();
-                return savedProject != 0 ? Results.Ok(_proyecto) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear proyecto"));
+                return savedProject != 0 ? Results.Ok(_proyecto) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear el proyecto"));
             } catch (Exception) {
                 return Results.StatusCode(500);
                 throw;

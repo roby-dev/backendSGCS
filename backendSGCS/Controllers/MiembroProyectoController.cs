@@ -13,7 +13,7 @@ namespace backendSGCS.Controllers
                 var miembroProyecto = context.MiembroProyecto.Where(x => x.IdMiembroProyecto == id).First();
                 return Results.Ok(miembroProyecto);
             } catch (Exception) {
-                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró proyecto"));
+                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el miembro del proyecto"));
             }
         };
 
@@ -21,7 +21,7 @@ namespace backendSGCS.Controllers
             try {
                 context.MiembroProyecto.Add(_member);
                 var savedMember = context.SaveChanges();
-                return savedMember != 0 ? Results.Ok(_member) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear cargo"));
+                return savedMember != 0 ? Results.Ok(_member) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear el miembro del proyecto"));
             } catch (Exception) {
                 return Results.StatusCode(500);
             }
@@ -32,11 +32,11 @@ namespace backendSGCS.Controllers
         public static Func<int, IResult> deleteMember = (int id) => {
             var member = context.MiembroProyecto.Find(id);
             if (member == null) {
-                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el miembro de proyecto"));
+                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el miembro del proyecto"));
             }
             context.MiembroProyecto.Remove(member);
             context.SaveChanges();
-            return Results.Ok(MessageHelper.createMessage(true, "Miembro proyecto borrado exitosamente"));
+            return Results.Ok(MessageHelper.createMessage(true, "Miembro del proyecto borrado exitosamente"));
         };
 
         internal static object getMembersByProject(int id) {
@@ -51,7 +51,7 @@ namespace backendSGCS.Controllers
         public static Func<int, MiembroProyecto, Task<IResult>> updateMember = async (int id, MiembroProyecto miembro) => {
             var _miembro = context.MiembroProyecto.Find(id);
             if (_miembro == null) {
-                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el miembro"));
+                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el miembro del proyecto"));
             }
             try {
                 context.Entry(_miembro).CurrentValues.SetValues(miembro);

@@ -11,7 +11,7 @@ namespace backendSGCS.Controllers {
             string password = _body.clave;
             var user = context.Usuario.Where(x=>x.Correo == email).FirstOrDefault();
             if (user == null) {
-                return Results.NotFound(MessageHelper.createMessage(false, "No existe correo electrónico"));
+                return Results.NotFound(MessageHelper.createMessage(false, "No existe el correo electrónico"));
             }
 
             bool isEqual = BCrypt.Net.BCrypt.Verify(password, user.Clave);

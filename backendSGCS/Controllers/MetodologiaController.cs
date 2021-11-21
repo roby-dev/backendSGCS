@@ -18,7 +18,7 @@ namespace backendSGCS.Controllers
             try {
                 context.Metodologia.Add(_metodologia);
                 var savedMetodologia = context.SaveChanges();
-                return savedMetodologia != 0 ? Results.Ok(_metodologia) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear usuario"));
+                return savedMetodologia != 0 ? Results.Ok(_metodologia) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear la metodología"));
             } catch (Exception) {
                 return Results.StatusCode(500);
                 throw;
