@@ -17,7 +17,7 @@ namespace backendSGCS.Controllers {
             if (isEqual) {
                 return user.Estado ? Results.Ok(user) : Results.NotFound(MessageHelper.createMessage(false, "Usuario inactivo"));
             } else {
-                return Results.NotFound(MessageHelper.createMessage(false, "Contraseña incorrecta"));
+                return Results.NotFound(MessageHelper.createMessage(false, "Clave incorrecta"));
             }
         };        
     }
