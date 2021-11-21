@@ -38,8 +38,8 @@ namespace backendSGCS.Controllers
             }
             try {
                 usuario.Clave = _usuario.Clave;
-                _usuario.Apellidos = ToUpperFirstLetter(_usuario.Apellidos.Trim());
-                _usuario.Nombres = ToUpperFirstLetter(_usuario.Nombres.Trim());
+                usuario.Apellidos = ToUpperFirstLetter(_usuario.Apellidos.Trim());
+                usuario.Nombres = ToUpperFirstLetter(_usuario.Nombres.Trim());
                 context.Entry(_usuario).CurrentValues.SetValues(usuario);
                 await context.SaveChangesAsync();
                 return Results.Ok(_usuario);
