@@ -38,7 +38,7 @@ app.MapPost("/api/login", ([FromBody] AuthHelper body) => AuthController.login(b
 /// < Model >
 /// Rutas para el CRUD del modelo Usuario
 /// </Model>
-app.MapGet("/api/usuarios",() => UsuarioController.getUsers).WithName("Obtener todos los usuarios");
+app.MapGet("/api/usuarios",UsuarioController.getUsers);
 app.MapGet("/api/usuarios/{id:int}", (int id) => UsuarioController.getUserById(id));
 app.MapPost("/api/usuarios", (Usuario _usuario) => UsuarioController.createUser(_usuario));
 app.MapDelete("/api/usuarios/{id:int}", (int id) => UsuarioController.deleteUser(id));
