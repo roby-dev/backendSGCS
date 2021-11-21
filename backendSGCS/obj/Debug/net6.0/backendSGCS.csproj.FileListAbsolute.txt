@@ -120,3 +120,4 @@ C:\backendSGCS\backendSGCS\obj\Debug\net6.0\backendSGCS.dll
 C:\backendSGCS\backendSGCS\obj\Debug\net6.0\ref\backendSGCS.dll
 C:\backendSGCS\backendSGCS\obj\Debug\net6.0\backendSGCS.pdb
 C:\backendSGCS\backendSGCS\obj\Debug\net6.0\backendSGCS.genruntimeconfig.cache
+C:\Users\ROBY\source\repos\backendSGCS\backendSGCS\bin\Debug\net6.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
