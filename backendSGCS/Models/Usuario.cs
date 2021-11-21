@@ -17,7 +17,7 @@ namespace backendSGCS.Models
         public string Celular { get; set; } = null!;
         public string Correo { get; set; } = null!;
         public string Clave { get; set; } = null!;
-        public bool? Estado { get; set; }
+        public bool Estado { get; set; }
         public string Rol { get; set; } = null!;
         [JsonIgnore]
         public virtual ICollection<MiembroProyecto> MiembroProyecto { get; set; }
