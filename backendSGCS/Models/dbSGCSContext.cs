@@ -7,17 +7,8 @@ namespace backendSGCS.Models
 {
     public partial class dbSGCSContext : DbContext
     {
-        private static dbSGCSContext? instance;
         public dbSGCSContext()
         {
-        }
-
-        public static dbSGCSContext getContext() {
-            if (instance == null) {
-                instance = new dbSGCSContext();
-                return instance;
-            }
-            return instance;
         }
 
         public dbSGCSContext(DbContextOptions<dbSGCSContext> options)
@@ -306,7 +297,8 @@ namespace backendSGCS.Models
                     .HasColumnName("estado");
 
                 entity.Property(e => e.Fecha)
-                    .HasColumnType("date")
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
                     .HasColumnName("fecha");
 
                 entity.Property(e => e.IdEntregable).HasColumnName("idEntregable");
@@ -346,10 +338,10 @@ namespace backendSGCS.Models
                 entity.HasKey(e => e.IdUsuario)
                     .HasName("PK_USUARIO");
 
-                entity.HasIndex(e => e.Correo, "UQ__Usuario__2A586E0B7665E6C4")
+                entity.HasIndex(e => e.Correo, "UQ__Usuario__2A586E0BBE6F04E2")
                     .IsUnique();
 
-                entity.HasIndex(e => e.Celular, "UQ__Usuario__2E4973E7399CC44D")
+                entity.HasIndex(e => e.Celular, "UQ__Usuario__2E4973E77D8EF387")
                     .IsUnique();
 
                 entity.Property(e => e.IdUsuario).HasColumnName("idUsuario");

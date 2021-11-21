@@ -27,7 +27,7 @@ namespace backendSGCS.Controllers
             context.SaveChanges();
             return Results.Ok(MessageHelper.createMessage(true, "Cargo borrado exitosamente"));
         };
-            
+
         public static Func<int, Cargo, Task<IResult>> updateCargo = async (int id, Cargo cargo) => {
             var _cargo = context.Cargo.Find(id);
             if (_cargo == null) {

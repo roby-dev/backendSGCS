@@ -18,11 +18,11 @@ namespace backendSGCS.Models
         public string Nombre { get; set; } = null!;
         public string Descripcion { get; set; } = null!;
         public int IdMetodologia { get; set; }
-        public bool? Estado { get; set; } = true;
+        public bool? Estado { get; set; }
         public string FechaInicio { get; set; } = null!;
         public string FechaFin { get; set; } = null!;
         [JsonPropertyName("metodologia")]
-        public virtual Metodologia? IdMetodologiaNavigation { get; set; } = null!;
+        public virtual Metodologia IdMetodologiaNavigation { get; set; } = null!;
         [JsonIgnore]
         public virtual ICollection<ElementoConfiguracion> ElementoConfiguracion { get; set; }
         [JsonIgnore]

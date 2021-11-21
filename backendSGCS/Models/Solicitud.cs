@@ -9,7 +9,7 @@ namespace backendSGCS.Models
         public string Solicitante { get; set; } = null!;
         public string Estado { get; set; } = null!;
         public int IdProyecto { get; set; }
-        public DateTime Fecha { get; set; }
+        public string Fecha { get; set; } = null!;
         public string Descripcion { get; set; } = null!;
         public string Objetivo { get; set; } = null!;
         public int IdEntregable { get; set; }

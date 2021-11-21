@@ -4,10 +4,12 @@ namespace backendSGCS.Helpers
 {
     public class MessageHelper
     {
-        public static Message createMessage(bool _ok, string _msg)
+        public bool ok { get; set; }
+        public string? msg { get; set; }
+
+        public static MessageHelper createMessage(bool _ok, string _msg)
         {
-            return new Message
-            {
+            return new MessageHelper {
                 ok = _ok,
                 msg = _msg
             };

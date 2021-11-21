@@ -14,8 +14,8 @@ namespace backendSGCS.Controllers {
                 var proyecto = context.Proyecto.Include("IdMetodologiaNavigation").Where(x => x.IdProyecto == id).First();
                 return Results.Ok(proyecto);
             } catch (Exception) {
-                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el proyecto"));                
-            }           
+                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el proyecto"));
+            }
         };
 
         public static Func<Proyecto, IResult> createProject = (Proyecto _proyecto) => {

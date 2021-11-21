@@ -17,6 +17,8 @@ namespace backendSGCS.Controllers
         public static Func<Usuario, IResult> createUser = (Usuario _usuario) => {
             _usuario.Apellidos = _usuario.Apellidos.Trim().ToUpper();
             _usuario.Nombres = _usuario.Nombres.Trim().ToUpper();
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(_usuario.Clave);
+            _usuario.Clave = passwordHash;
             try {
                 context.Usuario.Add(_usuario);
                 var savedUser = context.SaveChanges();
@@ -40,7 +42,7 @@ namespace backendSGCS.Controllers
                 return Results.Ok(_usuario);
             } catch (Exception e) {
                 return Results.NotFound(e);
-            }            
+            }
         };
 
         public static Func<int, Usuario, Task<IResult>> changePassword = async (int id, Usuario usuario) => {

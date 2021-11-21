@@ -1,11 +1,11 @@
 using backendSGCS.Controllers;
+using backendSGCS.Helpers;
 using backendSGCS.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddDbContextFactory<dbSGCSContext>();
 builder.Services.AddTransient<UsuarioController>();
 builder.Services.Configure<JsonOptions>(options =>
 {
@@ -21,6 +21,11 @@ app.UseSwaggerUI();
 /// Ruta principal del backend
 /// </Default>
 app.MapGet("/", () => Results.LocalRedirect("~/swagger/index.html"));
+
+/// < Login>
+/// Rutas para Logearse a la aplicación
+/// </Login>
+app.MapPost("/api/login", ([FromBody] AuthHelper body) => AuthController.login(body));
 
 /// < Model >
 /// Rutas para el CRUD del modelo Usuario

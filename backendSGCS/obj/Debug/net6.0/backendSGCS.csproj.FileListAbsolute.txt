@@ -58,3 +58,4 @@ C:\Users\ROBY\source\repos\backendSGCS\backendSGCS\bin\Debug\net6.0\Swashbuckle.
 C:\Users\ROBY\source\repos\backendSGCS\backendSGCS\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\ROBY\source\repos\backendSGCS\backendSGCS\obj\Debug\net6.0\backendSGCS.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\ROBY\source\repos\backendSGCS\backendSGCS\obj\Debug\net6.0\backendSGCS.csproj.AssemblyReference.cache
+C:\Users\ROBY\source\repos\backendSGCS\backendSGCS\bin\Debug\net6.0\BCrypt.Net-Next.dll

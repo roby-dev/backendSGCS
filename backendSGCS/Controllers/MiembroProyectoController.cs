@@ -13,8 +13,8 @@ namespace backendSGCS.Controllers
                 var miembroProyecto = context.MiembroProyecto.Where(x => x.IdMiembroProyecto == id).First();
                 return Results.Ok(miembroProyecto);
             } catch (Exception) {
-                return Results.NotFound(MessageHelper.createMessage(false,"No se encontró proyecto"));
-            }            
+                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró proyecto"));
+            }
         };
 
         public static Func<MiembroProyecto, IResult> createMember = (MiembroProyecto _member) => {

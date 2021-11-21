@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace backendSGCS.Models
 {
@@ -20,7 +21,9 @@ namespace backendSGCS.Models
         public bool? Estado { get; set; }
 
         public virtual FaseMetodologia IdFaseMetodologiaNavigation { get; set; } = null!;
+        [JsonIgnore]
         public virtual ICollection<ElementoConfiguracion> ElementoConfiguracion { get; set; }
+        [JsonIgnore]
         public virtual ICollection<Solicitud> Solicitud { get; set; }
     }
 }
