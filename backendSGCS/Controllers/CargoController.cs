@@ -38,7 +38,7 @@ namespace backendSGCS.Controllers
                 await context.SaveChangesAsync();
                 return Results.Ok(_cargo);
             } catch (Exception e) {
-                return Results.NotFound(e);
+                return Results.NotFound(MessageHelper.createMessage(false,"Error al intentar actualizar el cargo"));
             }
         };
     }

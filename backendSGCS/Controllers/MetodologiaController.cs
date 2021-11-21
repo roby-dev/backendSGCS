@@ -20,8 +20,7 @@ namespace backendSGCS.Controllers
                 var savedMetodologia = context.SaveChanges();
                 return savedMetodologia != 0 ? Results.Ok(_metodologia) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear la metodología"));
             } catch (Exception) {
-                return Results.StatusCode(500);
-                throw;
+                return Results.BadRequest(MessageHelper.createMessage(false, "Error interno del servidor"));                
             }
 
         };
@@ -45,7 +44,7 @@ namespace backendSGCS.Controllers
                 await context.SaveChangesAsync();
                 return Results.Ok(_metodologia);
             } catch (Exception e) {
-                return Results.NotFound(e);
+                return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar la metodología"));
             }
         };
     }

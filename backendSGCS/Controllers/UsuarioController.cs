@@ -23,7 +23,7 @@ namespace backendSGCS.Controllers
                 var savedUser = context.SaveChanges();
                 return savedUser != 0 ? Results.Ok(_usuario) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear el usuario"));
             } catch (Exception) {
-                return Results.StatusCode(500);
+                return Results.NotFound(MessageHelper.createMessage(false, "Error interno del servidor"));
             }
         };
 
@@ -40,7 +40,7 @@ namespace backendSGCS.Controllers
                 await context.SaveChangesAsync();
                 return Results.Ok(_usuario);
             } catch (Exception e) {
-                return Results.NotFound(e);
+                return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar al usuario"));
             }
         };
 
@@ -56,7 +56,7 @@ namespace backendSGCS.Controllers
                 await context.SaveChangesAsync();
                 return Results.Ok(_usuario);
             } catch (Exception e) {
-                return Results.NotFound(e);
+                return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar cambiar la contraseña"));
             }
         };
 

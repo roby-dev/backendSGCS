@@ -23,7 +23,7 @@ namespace backendSGCS.Controllers
                 var savedMember = context.SaveChanges();
                 return savedMember != 0 ? Results.Ok(_member) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear el miembro del proyecto"));
             } catch (Exception) {
-                return Results.StatusCode(500);
+                return Results.NotFound(MessageHelper.createMessage(false, "Error interno del servidor"));
             }
         };
 
@@ -58,7 +58,7 @@ namespace backendSGCS.Controllers
                 await context.SaveChangesAsync();
                 return Results.Ok(_miembro);
             } catch (Exception e) {
-                return Results.NotFound(e);
+                return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar el miembro del proyecto"));
             }
         };
     }

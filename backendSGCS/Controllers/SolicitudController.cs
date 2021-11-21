@@ -47,7 +47,7 @@ namespace backendSGCS.Controllers
             }
             catch (Exception e)
             {
-                return Results.NotFound(e);
+                return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar la solicitud"));
             }
         };
 

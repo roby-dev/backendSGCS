@@ -33,7 +33,7 @@ namespace backendSGCS.Controllers
             var _faseMetodologia = context.FaseMetodologia.Find(id);
             if (_faseMetodologia == null)
             {
-                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró la fase de metdología"));
+                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró la fase de metodología"));
             }
             try
             {
@@ -43,7 +43,7 @@ namespace backendSGCS.Controllers
             }
             catch (Exception e)
             {
-                return Results.NotFound(e);
+                return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar al fase de metodología"));
             }
         };
     }

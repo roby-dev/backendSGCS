@@ -24,8 +24,7 @@ namespace backendSGCS.Controllers {
                 var savedProject = context.SaveChanges();
                 return savedProject != 0 ? Results.Ok(_proyecto) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear el proyecto"));
             } catch (Exception) {
-                return Results.StatusCode(500);
-                throw;
+                return Results.NotFound(MessageHelper.createMessage(false, "Error interno del servidor"));                
             }
 
         };
@@ -49,7 +48,7 @@ namespace backendSGCS.Controllers {
                 await context.SaveChangesAsync();
                 return Results.Ok(_project);
             } catch (Exception e) {
-                return Results.NotFound(e);
+                return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar el proyecto"));
             }
         };
     }
