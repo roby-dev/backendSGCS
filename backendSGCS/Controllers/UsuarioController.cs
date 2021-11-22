@@ -19,9 +19,7 @@ namespace backendSGCS.Controllers
         public static Func<Usuario, IResult> createUser = (Usuario _usuario) => {
             dbSGCSContext context = new dbSGCSContext();
             _usuario.Apellidos = ToUpperFirstLetter(_usuario.Apellidos.Trim());
-            _usuario.Nombres = ToUpperFirstLetter(_usuario.Nombres.Trim());
-            _usuario.Apellidos = _usuario.Apellidos.Trim();
-            _usuario.Nombres = _usuario.Nombres.Trim();
+            _usuario.Nombres = ToUpperFirstLetter(_usuario.Nombres.Trim());        
             _usuario.Clave = BCrypt.Net.BCrypt.HashPassword(_usuario.Clave);             
             try {
                 context.Usuario.Add(_usuario);
@@ -40,9 +38,7 @@ namespace backendSGCS.Controllers
             try {
                 usuario.Clave = _usuario.Clave;
                 usuario.Apellidos = ToUpperFirstLetter(usuario.Apellidos.Trim());
-                usuario.Nombres = ToUpperFirstLetter(usuario.Nombres.Trim());
-                usuario.Apellidos = usuario.Apellidos.Trim();
-                usuario.Nombres = usuario.Nombres.Trim();
+                usuario.Nombres = ToUpperFirstLetter(usuario.Nombres.Trim());               
                 context.Entry(_usuario).CurrentValues.SetValues(usuario);
                 context.SaveChanges();
                 return Results.Ok(_usuario);
@@ -88,7 +84,7 @@ namespace backendSGCS.Controllers
                 }
                 final = final + " ";
             }
-            return final;
+            return final.Trim();
         };
     }
 }
