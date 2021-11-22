@@ -21,7 +21,7 @@ namespace backendSGCS.Controllers
             _usuario.Apellidos = ToUpperFirstLetter(_usuario.Apellidos.Trim());
             _usuario.Nombres = ToUpperFirstLetter(_usuario.Nombres.Trim());
             _usuario.Apellidos = _usuario.Apellidos.Trim();
-            _usuario.Nombres = _usuario.Apellidos.Trim();
+            _usuario.Nombres = _usuario.Nombres.Trim();
             _usuario.Clave = BCrypt.Net.BCrypt.HashPassword(_usuario.Clave);             
             try {
                 context.Usuario.Add(_usuario);
@@ -42,7 +42,7 @@ namespace backendSGCS.Controllers
                 usuario.Apellidos = ToUpperFirstLetter(usuario.Apellidos.Trim());
                 usuario.Nombres = ToUpperFirstLetter(usuario.Nombres.Trim());
                 usuario.Apellidos = usuario.Apellidos.Trim();
-                usuario.Nombres = usuario.Apellidos.Trim();
+                usuario.Nombres = usuario.Nombres.Trim();
                 context.Entry(_usuario).CurrentValues.SetValues(usuario);
                 context.SaveChanges();
                 return Results.Ok(_usuario);
