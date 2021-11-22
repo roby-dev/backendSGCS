@@ -16,7 +16,9 @@ namespace backendSGCS.Models
         public int IdFaseMetodologia { get; set; }
         public string Nomenclatura { get; set; } = null!;
         public string Descripcion { get; set; } = null!;
+        [JsonIgnore]
         public string FechaInicio { get; set; } = null!;
+        [JsonIgnore]
         public string FechaFin { get; set; } = null!;
         public bool? Estado { get; set; }
         [JsonPropertyName("fase")]
