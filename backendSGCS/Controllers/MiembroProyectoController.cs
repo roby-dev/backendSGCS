@@ -7,12 +7,15 @@ namespace backendSGCS.Controllers {
 
         public static Func<int, IResult> getMemberById = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
-            try {
-                var miembroProyecto = context.MiembroProyecto.Where(x => x.IdMiembroProyecto == id).Include("IdCargoNavigation").Include("IdProyectoNavigation.IdMetodologiaNavigation").Include("IdUsuarioNavigation").FirstOrDefault();
-                return Results.Ok(miembroProyecto);
-            } catch (Exception) {
-                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el miembro del proyecto"));
+            var miembroProyecto = context.MiembroProyecto.Where(x => x.IdMiembroProyecto == id)
+                                                         .Include("IdCargoNavigation")
+                                                         .Include("IdProyectoNavigation.IdMetodologiaNavigation")
+                                                         .Include("IdUsuarioNavigation")
+                                                         .FirstOrDefault();
+            if (miembroProyecto is null) {
+                Results.NotFound(MessageHelper.createMessage(false, "No se encontró el miembro del proyecto"));
             }
+            return Results.Ok(miembroProyecto);
         };
 
         public static Func<MiembroProyecto, IResult> createMember = (MiembroProyecto _member) => {
@@ -28,13 +31,16 @@ namespace backendSGCS.Controllers {
 
         public static Func<List<MiembroProyecto>> getMembers = () => {
             dbSGCSContext context = new dbSGCSContext();
-            return context.MiembroProyecto.Include("IdCargoNavigation").Include("IdProyectoNavigation.IdMetodologiaNavigation").Include("IdUsuarioNavigation").ToList();
+            return context.MiembroProyecto.Include("IdCargoNavigation")
+                                          .Include("IdProyectoNavigation.IdMetodologiaNavigation")
+                                          .Include("IdUsuarioNavigation")
+                                          .ToList();
         };
 
-        public static Func<int, IResult> deleteMember = (int id) => {
+        public static Func<int, IResult> deleteMember = (int _id) => {
             dbSGCSContext context = new dbSGCSContext();
-            var member = context.MiembroProyecto.Find(id);
-            if (member == null) {
+            var member = context.MiembroProyecto.Find(_id);
+            if (member is null) {
                 return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el miembro del proyecto"));
             }
             context.MiembroProyecto.Remove(member);
@@ -42,26 +48,34 @@ namespace backendSGCS.Controllers {
             return Results.Ok(MessageHelper.createMessage(true, "Miembro del proyecto borrado exitosamente"));
         };
 
-        public static Func<int, IResult> getMembersByProject = (int id) => {
+        public static Func<int, IResult> getMembersByProject = (int _id) => {
             dbSGCSContext context = new dbSGCSContext();
             try {
-                var miembrosProyecto = context.MiembroProyecto.Include("IdCargoNavigation").Include("IdProyectoNavigation.IdMetodologiaNavigation").Include("IdUsuarioNavigation").Where(x => x.IdProyecto == id).ToList();
-                return Results.Ok(miembrosProyecto);
+                var miembroProyecto = context.MiembroProyecto.Where(x => x.IdProyecto == _id)
+                                                        .Include("IdCargoNavigation")
+                                                        .Include("IdProyectoNavigation.IdMetodologiaNavigation")
+                                                        .Include("IdUsuarioNavigation")
+                                                        .FirstOrDefault();
+                return Results.Ok(miembroProyecto);
             } catch (Exception) {
                 return Results.NotFound(MessageHelper.createMessage(false, "No se encontraron miembros para este proyecto"));
             }
         };
 
-        public static Func<int, MiembroProyecto, Task<IResult>> updateMember = async (int id, MiembroProyecto miembro) => {
-            dbSGCSContext context = new dbSGCSContext();
-            var _miembro = context.MiembroProyecto.Find(id);
-            if (_miembro == null) {
-                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el miembro del proyecto"));
-            }
+        public static Func<int, MiembroProyecto, Task<IResult>> updateMember = async (int id, MiembroProyecto _miembro) => {          
             try {
-                context.Entry(_miembro).CurrentValues.SetValues(miembro);
+                dbSGCSContext context = new dbSGCSContext();
+                var miembroProyecto = context.MiembroProyecto.Where(x => x.IdMiembroProyecto == id)
+                                                             .Include("IdCargoNavigation")
+                                                             .Include("IdProyectoNavigation.IdMetodologiaNavigation")
+                                                             .Include("IdUsuarioNavigation")
+                                                             .FirstOrDefault();
+                if (miembroProyecto is null) {
+                    return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el miembro del proyecto"));
+                }
+                context.Entry(miembroProyecto).CurrentValues.SetValues(_miembro);
                 await context.SaveChangesAsync();
-                return Results.Ok(_miembro);
+                return Results.Ok(miembroProyecto);
             } catch (Exception e) {
                 return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar el miembro del proyecto"));
             }

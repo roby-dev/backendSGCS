@@ -12,29 +12,28 @@ namespace backendSGCS.Controllers {
 
         public static Func<int, IResult> getProjectById = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
-            try {
-                var proyecto = context.Proyecto.Include("IdMetodologiaNavigation").Where(x => x.IdProyecto == id).First();
-                return Results.Ok(proyecto);
-            } catch (Exception) {
+            var proyecto = context.Proyecto.Include("IdMetodologiaNavigation").Where(x => x.IdProyecto == id).FirstOrDefault();
+            if (proyecto is null) {
                 return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el proyecto"));
             }
+            return Results.Ok(proyecto);
         };
 
         public static Func<Proyecto, IResult> createProject = (Proyecto _proyecto) => {
-            dbSGCSContext context = new dbSGCSContext();
             try {
+                dbSGCSContext context = new dbSGCSContext();
                 context.Proyecto.Add(_proyecto);
-                var savedProject = context.SaveChanges();
-                return savedProject != 0 ? Results.Ok(_proyecto) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear el proyecto"));
+                context.SaveChanges();
+                return Results.Ok(_proyecto);
             } catch (Exception) {
-                return Results.NotFound(MessageHelper.createMessage(false, "Error interno del servidor"));
+                return Results.NotFound(MessageHelper.createMessage(false, "Error al crear el proyecto"));
             }
         };
 
         public static Func<int, IResult> deleteProject = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
             var project = context.Proyecto.Find(id);
-            if (project == null) {
+            if (project is null) {
                 return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el proyecto"));
             }
             context.Proyecto.Remove(project);
@@ -42,16 +41,16 @@ namespace backendSGCS.Controllers {
             return Results.Ok(MessageHelper.createMessage(true, "Proyecto borrado exitosamente"));
         };
 
-        public static Func<int, Proyecto, Task<IResult>> updateProject = async (int id, Proyecto project) => {
-            dbSGCSContext context = new dbSGCSContext();
-            var _project = context.Proyecto.Find(id);
-            if (_project == null) {
-                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el proyecto"));
-            }
+        public static Func<int, Proyecto, Task<IResult>> updateProject = async (int _id, Proyecto _project) => {
             try {
-                context.Entry(_project).CurrentValues.SetValues(project);
+                dbSGCSContext context = new dbSGCSContext();
+                var project = context.Proyecto.Include("IdMetodologiaNavigation").Where(x => x.IdProyecto == _id).FirstOrDefault();
+                if (project is null) {
+                    return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el proyecto"));
+                }
+                context.Entry(project).CurrentValues.SetValues(_project);
                 await context.SaveChangesAsync();
-                return Results.Ok(_project);
+                return Results.Ok(project);
             } catch (Exception e) {
                 return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar el proyecto"));
             }

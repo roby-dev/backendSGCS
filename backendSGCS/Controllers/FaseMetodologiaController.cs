@@ -6,10 +6,14 @@ namespace backendSGCS.Controllers {
     public class FaseMetodologiaController {
 
         public static Func<FaseMetodologia, IResult> createFaseMetodologia = (FaseMetodologia _faseMetodologia) => {
-            dbSGCSContext context = new dbSGCSContext();
-            context.FaseMetodologia.Add(_faseMetodologia);
-            var savedFaseMetodologia = context.SaveChanges();
-            return savedFaseMetodologia != 0 ? Results.Ok(_faseMetodologia) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear la fase de metdología"));
+            try {
+                dbSGCSContext context = new dbSGCSContext();
+                context.FaseMetodologia.Add(_faseMetodologia);
+                context.SaveChanges();
+                return Results.Ok(_faseMetodologia);
+            } catch (Exception) {
+                return Results.NotFound(MessageHelper.createMessage(false, "Error al crear la fase de metdología"));
+            }            
         };
 
         public static Func<List<FaseMetodologia>> getFaseMetodologias = () => {
@@ -20,7 +24,10 @@ namespace backendSGCS.Controllers {
         public static Func<int, IResult> getFaseMetodologiaById = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
             var faseMetodologia = context.FaseMetodologia.Include("IdMetodologiaNavigation").Where(x => x.IdFaseMetodologia == id).FirstOrDefault();
-            return faseMetodologia != null ? Results.Ok(faseMetodologia) : Results.NotFound(MessageHelper.createMessage(false, "No se encontró la fase de metdología"));
+            if(faseMetodologia is null) {
+                Results.NotFound(MessageHelper.createMessage(false, "No se encontró la fase de metdología"));
+            }
+            return Results.Ok(faseMetodologia);
         };
 
         public static Func<int, IResult> deleteFaseMetodologia = (int id) => {
@@ -34,16 +41,16 @@ namespace backendSGCS.Controllers {
             return Results.Ok(MessageHelper.createMessage(true, "Fase de metodología borrada exitosamente"));
         };
 
-        public static Func<int, FaseMetodologia, Task<IResult>> updateFaseMetodologia = async (int id, FaseMetodologia faseMetodologia) => {
-            dbSGCSContext context = new dbSGCSContext();
-            var _faseMetodologia = context.FaseMetodologia.Find(id);
-            if (_faseMetodologia == null) {
-                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró la fase de metodología"));
-            }
+        public static Func<int, FaseMetodologia, Task<IResult>> updateFaseMetodologia = async (int _id, FaseMetodologia _faseMetodologia) => {            
             try {
-                context.Entry(_faseMetodologia).CurrentValues.SetValues(faseMetodologia);
+                dbSGCSContext context = new dbSGCSContext();
+                var faseMetodologia = context.FaseMetodologia.Include("IdMetodologiaNavigation").Where(x => x.IdFaseMetodologia == _id).FirstOrDefault();
+                if (faseMetodologia == null) {
+                    return Results.NotFound(MessageHelper.createMessage(false, "No se encontró la fase de metodología"));
+                }
+                context.Entry(faseMetodologia).CurrentValues.SetValues(_faseMetodologia);
                 await context.SaveChangesAsync();
-                return Results.Ok(_faseMetodologia);
+                return Results.Ok(faseMetodologia);
             } catch (Exception e) {
                 return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar al fase de metodología"));
             }
