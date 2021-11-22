@@ -5,13 +5,13 @@ namespace backendSGCS.Controllers {
     public class CargoController {
 
         public static Func<Cargo, IResult> createCargo = (Cargo _cargo) => {
-            dbSGCSContext context = new dbSGCSContext();
+            using dbSGCSContext context = new();
             try {
                 _cargo.Nombre = _cargo.Nombre.Trim();
-                var cargo = context.Cargo.Where(x => x.Nombre == _cargo.Nombre).FirstOrDefault();
+                Cargo? cargo = context.Cargo.Where(x => x.Nombre == _cargo.Nombre).FirstOrDefault();
                 if (cargo == null) {
-                    context.Cargo.Add(_cargo);
-                    context.SaveChanges();
+                    _ = context.Cargo.Add(_cargo);
+                    _ = context.SaveChanges();
                     return Results.Ok(_cargo);
                 }
                 return Results.NotFound(MessageHelper.createMessage(false, "Nombre de cargo ya registrado"));
@@ -42,13 +42,13 @@ namespace backendSGCS.Controllers {
             return Results.Ok(MessageHelper.createMessage(true, "Cargo borrado exitosamente"));
         };
 
-        public static Func<int, Cargo, Task<IResult>> updateCargo = async (int id, Cargo _cargo) => {
-            dbSGCSContext context = new dbSGCSContext();
-            var cargo = context.Cargo.Find(id);
-            if (cargo == null) {
-                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el cargo"));
-            }
+        public static Func<int, Cargo, Task<IResult>> updateCargo = async (int id, Cargo _cargo) => {         
             try {
+                dbSGCSContext context = new dbSGCSContext();
+                var cargo = context.Cargo.Find(id);
+                if (cargo == null) {
+                    return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el cargo"));
+                }
                 _cargo.Nombre = _cargo.Nombre.Trim();
                 context.Entry(cargo).CurrentValues.SetValues(_cargo);
                 await context.SaveChangesAsync();

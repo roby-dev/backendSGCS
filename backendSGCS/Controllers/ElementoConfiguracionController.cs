@@ -6,10 +6,14 @@ namespace backendSGCS.Controllers {
     public class ElementoConfiguracionController {
 
         public static Func<ElementoConfiguracion, IResult> createElementoConfiguracion = (ElementoConfiguracion _elementoConfiguracion) => {
-            dbSGCSContext context = new dbSGCSContext();
-            context.ElementoConfiguracion.Add(_elementoConfiguracion);
-            var savedElementoConfiguracion = context.SaveChanges();
-            return savedElementoConfiguracion != 0 ? Results.Ok(_elementoConfiguracion) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear el elemento de configuración"));
+            try {
+                dbSGCSContext context = new dbSGCSContext();
+                context.ElementoConfiguracion.Add(_elementoConfiguracion);
+                context.SaveChanges();
+                return Results.Ok(_elementoConfiguracion);
+            } catch (Exception) {
+                return Results.NotFound(MessageHelper.createMessage(false, "Error al crear el elemento de configuración"));
+            }
         };
 
         public static Func<List<ElementoConfiguracion>> getElementoConfiguracions = () => {
@@ -19,7 +23,7 @@ namespace backendSGCS.Controllers {
 
         public static Func<int, IResult> getElementoConfiguracionById = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
-            var elementoConfiguracion = context.ElementoConfiguracion.Include("IdLineaBaseNavigation.IdEntregableNavigation.IdFaseMetodologiaNavigation").Include("IdLineaBaseNavigation.IdProyectoNavigation.IdMetodologiaNavigation").Where(x=>x.IdElementoConfiguracion==id).FirstOrDefault();
+            var elementoConfiguracion = context.ElementoConfiguracion.Include("IdLineaBaseNavigation.IdEntregableNavigation.IdFaseMetodologiaNavigation").Include("IdLineaBaseNavigation.IdProyectoNavigation.IdMetodologiaNavigation").Where(x => x.IdElementoConfiguracion == id).FirstOrDefault();
             return elementoConfiguracion != null ? Results.Ok(elementoConfiguracion) : Results.NotFound(MessageHelper.createMessage(false, "No se encontró el elemento de configuración"));
         };
 
@@ -35,12 +39,13 @@ namespace backendSGCS.Controllers {
         };
 
         public static Func<int, ElementoConfiguracion, Task<IResult>> updateElementoConfiguracion = async (int id, ElementoConfiguracion elementoConfiguracion) => {
-            dbSGCSContext context = new dbSGCSContext();
-            var _elementoConfiguracion = context.ElementoConfiguracion.Include("IdLineaBaseNavigation.IdEntregableNavigation.IdFaseMetodologiaNavigation").Include("IdLineaBaseNavigation.IdProyectoNavigation.IdMetodologiaNavigation").Where(x => x.IdElementoConfiguracion == id).FirstOrDefault();
-            if (_elementoConfiguracion == null) {
-                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el elemento de configuración"));
-            }
             try {
+                dbSGCSContext context = new dbSGCSContext();
+                var _elementoConfiguracion = context.ElementoConfiguracion.Include("IdLineaBaseNavigation.IdEntregableNavigation.IdFaseMetodologiaNavigation").Include("IdLineaBaseNavigation.IdProyectoNavigation.IdMetodologiaNavigation").Where(x => x.IdElementoConfiguracion == id).FirstOrDefault();
+                if (_elementoConfiguracion == null) {
+                    return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el elemento de configuración"));
+                }
+
                 context.Entry(_elementoConfiguracion).CurrentValues.SetValues(elementoConfiguracion);
                 await context.SaveChangesAsync();
                 return Results.Ok(_elementoConfiguracion);

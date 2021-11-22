@@ -16,6 +16,7 @@ namespace backendSGCS.Controllers {
             Result.cantidadProyecto = context.Proyecto.ToList().Count;
             Result.cantidadSolicitud = context.Solicitud.ToList().Count;
             Result.cantidadUsuario = context.Usuario.ToList().Count;
+            Result.cantidadVersiones = context.VersionElementoConfiguracion.ToList().Count;
             return Results.Ok(Result);
         };
     }

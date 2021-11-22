@@ -70,9 +70,7 @@ namespace backendSGCS.Models
                 entity.Property(e => e.Descripcion)
                     .HasMaxLength(255)
                     .IsUnicode(false)
-                    .HasColumnName("descripcion");
-
-                entity.Property(e => e.IdEntregable).HasColumnName("idEntregable");
+                    .HasColumnName("descripcion");                
 
                 entity.Property(e => e.IdLineaBase).HasColumnName("idLineaBase");
 
