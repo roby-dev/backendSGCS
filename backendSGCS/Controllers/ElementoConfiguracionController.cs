@@ -1,5 +1,6 @@
 ﻿using backendSGCS.Helpers;
 using backendSGCS.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace backendSGCS.Controllers {
     public class ElementoConfiguracionController {
@@ -13,12 +14,12 @@ namespace backendSGCS.Controllers {
 
         public static Func<List<ElementoConfiguracion>> getElementoConfiguracions = () => {
             dbSGCSContext context = new dbSGCSContext();
-            return context.ElementoConfiguracion.ToList();
+            return context.ElementoConfiguracion.Include("IdLineaBaseNavigation.IdEntregableNavigation.IdFaseMetodologiaNavigation").Include("IdLineaBaseNavigation.IdProyectoNavigation.IdMetodologiaNavigation").ToList();
         };
 
         public static Func<int, IResult> getElementoConfiguracionById = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
-            var elementoConfiguracion = context.ElementoConfiguracion.Find(id);
+            var elementoConfiguracion = context.ElementoConfiguracion.Include("IdLineaBaseNavigation.IdEntregableNavigation.IdFaseMetodologiaNavigation").Include("IdLineaBaseNavigation.IdProyectoNavigation.IdMetodologiaNavigation").Where(x=>x.IdElementoConfiguracion==id).FirstOrDefault();
             return elementoConfiguracion != null ? Results.Ok(elementoConfiguracion) : Results.NotFound(MessageHelper.createMessage(false, "No se encontró el elemento de configuración"));
         };
 
@@ -35,7 +36,7 @@ namespace backendSGCS.Controllers {
 
         public static Func<int, ElementoConfiguracion, Task<IResult>> updateElementoConfiguracion = async (int id, ElementoConfiguracion elementoConfiguracion) => {
             dbSGCSContext context = new dbSGCSContext();
-            var _elementoConfiguracion = context.ElementoConfiguracion.Find(id);
+            var _elementoConfiguracion = context.ElementoConfiguracion.Include("IdLineaBaseNavigation.IdEntregableNavigation.IdFaseMetodologiaNavigation").Include("IdLineaBaseNavigation.IdProyectoNavigation.IdMetodologiaNavigation").Where(x => x.IdElementoConfiguracion == id).FirstOrDefault();
             if (_elementoConfiguracion == null) {
                 return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el elemento de configuración"));
             }

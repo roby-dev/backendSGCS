@@ -1,5 +1,6 @@
 ﻿using backendSGCS.Helpers;
 using backendSGCS.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace backendSGCS.Controllers {
     public class LineaBaseController {
@@ -13,12 +14,12 @@ namespace backendSGCS.Controllers {
 
         public static Func<List<LineaBase>> getLineaBases = () => {
             dbSGCSContext context = new dbSGCSContext();
-            return context.LineaBase.ToList();
+            return context.LineaBase.Include("IdEntregableNavigation.IdFaseMetodologiaNavigation").Include("IdProyectoNavigation.IdMetodologiaNavigation").ToList();
         };
 
         public static Func<int, IResult> getLineaBaseById = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
-            var lineaBase = context.LineaBase.Find(id);
+            var lineaBase = context.LineaBase.Include("IdEntregableNavigation.IdFaseMetodologiaNavigation").Include("IdProyectoNavigation.IdMetodologiaNavigation").Where(x => x.IdLineaBase == id).FirstOrDefault();
             return lineaBase != null ? Results.Ok(lineaBase) : Results.NotFound(MessageHelper.createMessage(false, "No se encontró la linea base"));
         };
 
@@ -35,7 +36,7 @@ namespace backendSGCS.Controllers {
 
         public static Func<int, LineaBase, Task<IResult>> updateLineaBase = async (int id, LineaBase lineaBase) => {
             dbSGCSContext context = new dbSGCSContext();
-            var _lineaBase = context.LineaBase.Find(id);
+            var _lineaBase = context.LineaBase.Include("IdEntregableNavigation.IdFaseMetodologiaNavigation").Include("IdProyectoNavigation.IdMetodologiaNavigation").Where(x => x.IdLineaBase == id).FirstOrDefault();
             if (_lineaBase == null) {
                 return Results.NotFound(MessageHelper.createMessage(false, "No se encontró la linea base"));
             }

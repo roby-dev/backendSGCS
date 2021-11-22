@@ -8,7 +8,7 @@ namespace backendSGCS.Controllers {
         public static Func<int, IResult> getMemberById = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
             try {
-                var miembroProyecto = context.MiembroProyecto.Where(x => x.IdMiembroProyecto == id).Include("IdCargoNavigation").Include("IdProyectoNavigation").Include("IdUsuarioNavigation").FirstOrDefault();
+                var miembroProyecto = context.MiembroProyecto.Where(x => x.IdMiembroProyecto == id).Include("IdCargoNavigation").Include("IdProyectoNavigation.IdMetodologiaNavigation").Include("IdUsuarioNavigation").FirstOrDefault();
                 return Results.Ok(miembroProyecto);
             } catch (Exception) {
                 return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el miembro del proyecto"));
@@ -28,7 +28,7 @@ namespace backendSGCS.Controllers {
 
         public static Func<List<MiembroProyecto>> getMembers = () => {
             dbSGCSContext context = new dbSGCSContext();
-            return context.MiembroProyecto.Include("IdCargoNavigation").Include("IdProyectoNavigation").Include("IdUsuarioNavigation").ToList();
+            return context.MiembroProyecto.Include("IdCargoNavigation").Include("IdProyectoNavigation.IdMetodologiaNavigation").Include("IdUsuarioNavigation").ToList();
         };
 
         public static Func<int, IResult> deleteMember = (int id) => {
@@ -45,7 +45,7 @@ namespace backendSGCS.Controllers {
         public static Func<int, IResult> getMembersByProject = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
             try {
-                var miembrosProyecto = context.MiembroProyecto.Where(x => x.IdProyecto == id).ToList();
+                var miembrosProyecto = context.MiembroProyecto.Include("IdCargoNavigation").Include("IdProyectoNavigation.IdMetodologiaNavigation").Include("IdUsuarioNavigation").Where(x => x.IdProyecto == id).ToList();
                 return Results.Ok(miembrosProyecto);
             } catch (Exception) {
                 return Results.NotFound(MessageHelper.createMessage(false, "No se encontraron miembros para este proyecto"));
