@@ -1,5 +1,6 @@
 ﻿using backendSGCS.Helpers;
 using backendSGCS.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace backendSGCS.Controllers {
     public class MiembroProyectoController {
@@ -7,7 +8,7 @@ namespace backendSGCS.Controllers {
         public static Func<int, IResult> getMemberById = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
             try {
-                var miembroProyecto = context.MiembroProyecto.Where(x => x.IdMiembroProyecto == id).First();
+                var miembroProyecto = context.MiembroProyecto.Where(x => x.IdMiembroProyecto == id).Include("IdCargoNavigation").Include("IdProyectoNavigation").Include("IdUsuarioNavigation").FirstOrDefault();
                 return Results.Ok(miembroProyecto);
             } catch (Exception) {
                 return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el miembro del proyecto"));
@@ -25,7 +26,7 @@ namespace backendSGCS.Controllers {
         };
         public static Func<List<MiembroProyecto>> getMembers = () => {
             dbSGCSContext context = new dbSGCSContext();
-            return context.MiembroProyecto.ToList();
+            return context.MiembroProyecto.Include("IdCargoNavigation").Include("IdProyectoNavigation").Include("IdUsuarioNavigation").ToList();
         };
         public static Func<int, IResult> deleteMember = (int id) => {
             dbSGCSContext context = new dbSGCSContext();

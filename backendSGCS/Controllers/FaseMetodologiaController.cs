@@ -1,5 +1,6 @@
 ﻿using backendSGCS.Helpers;
 using backendSGCS.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace backendSGCS.Controllers {
     public class FaseMetodologiaController {
@@ -12,11 +13,11 @@ namespace backendSGCS.Controllers {
         };
         public static Func<List<FaseMetodologia>> getFaseMetodologias = () => {
             dbSGCSContext context = new dbSGCSContext();
-            return context.FaseMetodologia.ToList();
+            return context.FaseMetodologia.Include("IdMetodologiaNavigation").ToList();
         };
         public static Func<int, IResult> getFaseMetodologiaById = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
-            var faseMetodologia = context.FaseMetodologia.Find(id);
+            var faseMetodologia = context.FaseMetodologia.Include("IdMetodologiaNavigation").Where(x=>x.IdFaseMetodologia==id).FirstOrDefault();
             return faseMetodologia != null ? Results.Ok(faseMetodologia) : Results.NotFound(MessageHelper.createMessage(false, "No se encontró la fase de metdología"));
         };
         public static Func<int, IResult> deleteFaseMetodologia = (int id) => {
