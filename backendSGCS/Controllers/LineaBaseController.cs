@@ -10,15 +10,18 @@ namespace backendSGCS.Controllers {
             var savedLineaBase = context.SaveChanges();
             return savedLineaBase != 0 ? Results.Ok(_lineaBase) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear la linea base"));
         };
+
         public static Func<List<LineaBase>> getLineaBases = () => {
             dbSGCSContext context = new dbSGCSContext();
             return context.LineaBase.ToList();
         };
+
         public static Func<int, IResult> getLineaBaseById = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
             var lineaBase = context.LineaBase.Find(id);
             return lineaBase != null ? Results.Ok(lineaBase) : Results.NotFound(MessageHelper.createMessage(false, "No se encontró la linea base"));
         };
+
         public static Func<int, IResult> deleteLineaBase = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
             var lineaBase = context.LineaBase.Find(id);
@@ -29,6 +32,7 @@ namespace backendSGCS.Controllers {
             context.SaveChanges();
             return Results.Ok(MessageHelper.createMessage(true, "Linea base borrada exitosamente"));
         };
+
         public static Func<int, LineaBase, Task<IResult>> updateLineaBase = async (int id, LineaBase lineaBase) => {
             dbSGCSContext context = new dbSGCSContext();
             var _lineaBase = context.LineaBase.Find(id);

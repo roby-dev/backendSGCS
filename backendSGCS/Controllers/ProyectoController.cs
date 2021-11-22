@@ -9,6 +9,7 @@ namespace backendSGCS.Controllers {
             dbSGCSContext context = new dbSGCSContext();
             return context.Proyecto.Include("IdMetodologiaNavigation").ToList();
         };
+
         public static Func<int, IResult> getProjectById = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
             try {
@@ -18,6 +19,7 @@ namespace backendSGCS.Controllers {
                 return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el proyecto"));
             }
         };
+
         public static Func<Proyecto, IResult> createProject = (Proyecto _proyecto) => {
             dbSGCSContext context = new dbSGCSContext();
             try {
@@ -28,6 +30,7 @@ namespace backendSGCS.Controllers {
                 return Results.NotFound(MessageHelper.createMessage(false, "Error interno del servidor"));
             }
         };
+
         public static Func<int, IResult> deleteProject = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
             var project = context.Proyecto.Find(id);
@@ -38,6 +41,7 @@ namespace backendSGCS.Controllers {
             context.SaveChanges();
             return Results.Ok(MessageHelper.createMessage(true, "Proyecto borrado exitosamente"));
         };
+
         public static Func<int, Proyecto, Task<IResult>> updateProject = async (int id, Proyecto project) => {
             dbSGCSContext context = new dbSGCSContext();
             var _project = context.Proyecto.Find(id);

@@ -6,6 +6,11 @@ namespace backendSGCS.Models
 {
     public partial class MiembroProyecto
     {
+        public MiembroProyecto()
+        {
+            Solicitud = new HashSet<Solicitud>();
+        }
+
         public int IdMiembroProyecto { get; set; }
         public int IdUsuario { get; set; }
         public int IdProyecto { get; set; }
@@ -16,5 +21,7 @@ namespace backendSGCS.Models
         public virtual Proyecto IdProyectoNavigation { get; set; } = null!;
         [JsonPropertyName("usuario")]
         public virtual Usuario IdUsuarioNavigation { get; set; } = null!;
+        [JsonIgnore]
+        public virtual ICollection<Solicitud> Solicitud { get; set; }
     }
 }

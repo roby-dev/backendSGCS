@@ -26,6 +26,7 @@ namespace backendSGCS.Models
         public virtual DbSet<Proyecto> Proyecto { get; set; } = null!;
         public virtual DbSet<Solicitud> Solicitud { get; set; } = null!;
         public virtual DbSet<Usuario> Usuario { get; set; } = null!;
+        public virtual DbSet<VersionElementoConfiguracion> VersionElementoConfiguracion { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -43,13 +44,18 @@ namespace backendSGCS.Models
                 entity.HasKey(e => e.IdCargo)
                     .HasName("PK_CARGO");
 
-                entity.HasIndex(e => e.Nombre, "UQ_NameCargo")
+                entity.HasIndex(e => e.Descripcion, "UQ_NameCargo")
                     .IsUnique();
 
                 entity.Property(e => e.IdCargo).HasColumnName("idCargo");
 
-                entity.Property(e => e.Nombre)
+                entity.Property(e => e.Descripcion)
                     .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("descripcion");
+
+                entity.Property(e => e.Nombre)
+                    .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("nombre");
             });
@@ -70,30 +76,16 @@ namespace backendSGCS.Models
 
                 entity.Property(e => e.IdLineaBase).HasColumnName("idLineaBase");
 
-                entity.Property(e => e.IdProyecto).HasColumnName("idProyecto");
-
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(255)
                     .IsUnicode(false)
                     .HasColumnName("nombre");
 
-                entity.HasOne(d => d.IdEntregableNavigation)
-                    .WithMany(p => p.ElementoConfiguracion)
-                    .HasForeignKey(d => d.IdEntregable)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("ElementoConfiguracion_fk2");
-
                 entity.HasOne(d => d.IdLineaBaseNavigation)
                     .WithMany(p => p.ElementoConfiguracion)
                     .HasForeignKey(d => d.IdLineaBase)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("ElementoConfiguracion_fk1");
-
-                entity.HasOne(d => d.IdProyectoNavigation)
-                    .WithMany(p => p.ElementoConfiguracion)
-                    .HasForeignKey(d => d.IdProyecto)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("ElementoConfiguracion_fk0");
+                    .HasConstraintName("FK_ElementoConfiguracion_LineaBase");
             });
 
             modelBuilder.Entity<Entregable>(entity =>
@@ -113,20 +105,15 @@ namespace backendSGCS.Models
                     .HasColumnName("estado")
                     .HasDefaultValueSql("((1))");
 
-                entity.Property(e => e.FechaFin)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("fechaFin");
-
-                entity.Property(e => e.FechaInicio)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("fechaInicio");
-
                 entity.Property(e => e.IdFaseMetodologia).HasColumnName("idFaseMetodologia");
 
-                entity.Property(e => e.Nomenclatura)
+                entity.Property(e => e.Nombre)
                     .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("nombre");
+
+                entity.Property(e => e.Nomenclatura)
+                    .HasMaxLength(10)
                     .IsUnicode(false)
                     .HasColumnName("nomenclatura");
 
@@ -170,20 +157,25 @@ namespace backendSGCS.Models
 
                 entity.Property(e => e.IdLineaBase).HasColumnName("idLineaBase");
 
-                entity.Property(e => e.Fecha)
-                    .HasMaxLength(255)
+                entity.Property(e => e.FechaFin)
+                    .HasMaxLength(15)
                     .IsUnicode(false)
-                    .HasColumnName("fecha");
+                    .HasColumnName("fechaFin");
 
-                entity.Property(e => e.IdFaseMetodologia).HasColumnName("idFaseMetodologia");
+                entity.Property(e => e.FechaInicio)
+                    .HasMaxLength(15)
+                    .IsUnicode(false)
+                    .HasColumnName("fechaInicio");
+
+                entity.Property(e => e.IdEntregable).HasColumnName("idEntregable");
 
                 entity.Property(e => e.IdProyecto).HasColumnName("idProyecto");
 
-                entity.HasOne(d => d.IdFaseMetodologiaNavigation)
+                entity.HasOne(d => d.IdEntregableNavigation)
                     .WithMany(p => p.LineaBase)
-                    .HasForeignKey(d => d.IdFaseMetodologia)
+                    .HasForeignKey(d => d.IdEntregable)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("LineaBase_fk1");
+                    .HasConstraintName("FK_LineaBase_Entregable");
 
                 entity.HasOne(d => d.IdProyectoNavigation)
                     .WithMany(p => p.LineaBase)
@@ -260,12 +252,12 @@ namespace backendSGCS.Models
                     .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.FechaFin)
-                    .HasMaxLength(50)
+                    .HasMaxLength(15)
                     .IsUnicode(false)
                     .HasColumnName("fechaFin");
 
                 entity.Property(e => e.FechaInicio)
-                    .HasMaxLength(50)
+                    .HasMaxLength(15)
                     .IsUnicode(false)
                     .HasColumnName("fechaInicio");
 
@@ -275,6 +267,11 @@ namespace backendSGCS.Models
                     .HasMaxLength(255)
                     .IsUnicode(false)
                     .HasColumnName("nombre");
+
+                entity.Property(e => e.Repositorio)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("repositorio");
 
                 entity.HasOne(d => d.IdMetodologiaNavigation)
                     .WithMany(p => p.Proyecto)
@@ -290,6 +287,11 @@ namespace backendSGCS.Models
 
                 entity.Property(e => e.IdSolicitud).HasColumnName("idSolicitud");
 
+                entity.Property(e => e.Archivo)
+                    .HasMaxLength(15)
+                    .IsUnicode(false)
+                    .HasColumnName("archivo");
+
                 entity.Property(e => e.Descripcion)
                     .HasMaxLength(255)
                     .IsUnicode(false)
@@ -301,13 +303,13 @@ namespace backendSGCS.Models
                     .HasColumnName("estado");
 
                 entity.Property(e => e.Fecha)
-                    .HasMaxLength(255)
+                    .HasMaxLength(15)
                     .IsUnicode(false)
                     .HasColumnName("fecha");
 
-                entity.Property(e => e.IdEntregable).HasColumnName("idEntregable");
+                entity.Property(e => e.IdElementoConfiguracion).HasColumnName("idElementoConfiguracion");
 
-                entity.Property(e => e.IdProyecto).HasColumnName("idProyecto");
+                entity.Property(e => e.IdMiembroProyecto).HasColumnName("idMiembroProyecto");
 
                 entity.Property(e => e.Objetivo)
                     .HasMaxLength(255)
@@ -319,22 +321,17 @@ namespace backendSGCS.Models
                     .IsUnicode(false)
                     .HasColumnName("respuesta");
 
-                entity.Property(e => e.Solicitante)
-                    .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasColumnName("solicitante");
-
-                entity.HasOne(d => d.IdEntregableNavigation)
+                entity.HasOne(d => d.IdElementoConfiguracionNavigation)
                     .WithMany(p => p.Solicitud)
-                    .HasForeignKey(d => d.IdEntregable)
+                    .HasForeignKey(d => d.IdElementoConfiguracion)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Solicitud_fk1");
+                    .HasConstraintName("FK_Solicitud_ElementoConfiguracion");
 
-                entity.HasOne(d => d.IdProyectoNavigation)
+                entity.HasOne(d => d.IdMiembroProyectoNavigation)
                     .WithMany(p => p.Solicitud)
-                    .HasForeignKey(d => d.IdProyecto)
+                    .HasForeignKey(d => d.IdMiembroProyecto)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Solicitud_fk0");
+                    .HasConstraintName("FK_Solicitud_MiembroProyecto");
             });
 
             modelBuilder.Entity<Usuario>(entity =>
@@ -384,6 +381,36 @@ namespace backendSGCS.Models
                     .HasMaxLength(255)
                     .IsUnicode(false)
                     .HasColumnName("rol");
+            });
+
+            modelBuilder.Entity<VersionElementoConfiguracion>(entity =>
+            {
+                entity.HasKey(e => e.IdVersion);
+
+                entity.Property(e => e.IdVersion).HasColumnName("idVersion");
+
+                entity.Property(e => e.Enlace)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("enlace");
+
+                entity.Property(e => e.Fecha)
+                    .HasMaxLength(15)
+                    .IsUnicode(false)
+                    .HasColumnName("fecha");
+
+                entity.Property(e => e.IdSolicitud).HasColumnName("idSolicitud");
+
+                entity.Property(e => e.Version)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasColumnName("version");
+
+                entity.HasOne(d => d.IdSolicitudNavigation)
+                    .WithMany(p => p.VersionElementoConfiguracion)
+                    .HasForeignKey(d => d.IdSolicitud)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_VersionElementoConfiguracion_Solicitud");
             });
 
             OnModelCreatingPartial(modelBuilder);

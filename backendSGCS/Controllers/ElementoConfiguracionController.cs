@@ -3,16 +3,19 @@ using backendSGCS.Models;
 
 namespace backendSGCS.Controllers {
     public class ElementoConfiguracionController {
+
         public static Func<ElementoConfiguracion, IResult> createElementoConfiguracion = (ElementoConfiguracion _elementoConfiguracion) => {
             dbSGCSContext context = new dbSGCSContext();
             context.ElementoConfiguracion.Add(_elementoConfiguracion);
             var savedElementoConfiguracion = context.SaveChanges();
             return savedElementoConfiguracion != 0 ? Results.Ok(_elementoConfiguracion) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear el elemento de configuración"));
         };
+
         public static Func<List<ElementoConfiguracion>> getElementoConfiguracions = () => {
             dbSGCSContext context = new dbSGCSContext();
             return context.ElementoConfiguracion.ToList();
         };
+
         public static Func<int, IResult> getElementoConfiguracionById = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
             var elementoConfiguracion = context.ElementoConfiguracion.Find(id);

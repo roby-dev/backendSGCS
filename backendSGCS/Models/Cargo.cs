@@ -13,6 +13,7 @@ namespace backendSGCS.Models
 
         public int IdCargo { get; set; }
         public string Nombre { get; set; } = null!;
+        public string Descripcion { get; set; } = null!;
         [JsonIgnore]
         public virtual ICollection<MiembroProyecto> MiembroProyecto { get; set; }
     }

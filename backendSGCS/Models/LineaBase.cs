@@ -13,10 +13,11 @@ namespace backendSGCS.Models
 
         public int IdLineaBase { get; set; }
         public int IdProyecto { get; set; }
-        public int IdFaseMetodologia { get; set; }
-        public string Fecha { get; set; } = null!;
-        [JsonPropertyName("fase")]
-        public virtual FaseMetodologia IdFaseMetodologiaNavigation { get; set; } = null!;
+        public int IdEntregable { get; set; }
+        public string FechaInicio { get; set; } = null!;
+        public string FechaFin { get; set; } = null!;
+        [JsonPropertyName("entregable")]
+        public virtual Entregable IdEntregableNavigation { get; set; } = null!;
         [JsonPropertyName("proyecto")]
         public virtual Proyecto IdProyectoNavigation { get; set; } = null!;
         [JsonIgnore]

@@ -10,13 +10,13 @@ namespace backendSGCS.Controllers {
             string password = _body.clave;
             var user = context.Usuario.Where(x => x.Correo == email).FirstOrDefault();
             if (user == null) {
-                return Results.NotFound(MessageHelper.createMessage(false, "No existe el correo electrónico"));
+                return Results.NotFound(MessageHelper.createMessage(false, "no existe el correo electrónico"));
             }
-            bool isEqual = BCrypt.Net.BCrypt.Verify(password, user.Clave);
-            if (isEqual) {
-                return user.Estado ? Results.Ok(user) : Results.NotFound(MessageHelper.createMessage(false, "Usuario inactivo"));
+            bool isequal = BCrypt.Net.BCrypt.Verify(password, user.Clave);
+            if (isequal) {
+                return user.Estado ? Results.Ok(user) : Results.NotFound(MessageHelper.createMessage(false, "usuario inactivo"));
             } else {
-                return Results.NotFound(MessageHelper.createMessage(false, "Clave incorrecta"));
+                return Results.NotFound(MessageHelper.createMessage(false, "clave incorrecta"));
             }
         };
     }

@@ -10,11 +10,13 @@ namespace backendSGCS.Controllers
             dbSGCSContext context = new dbSGCSContext();
             return context.Usuario.ToList();
         };
+
         public static Func<int, IResult> getUserById = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
             var usuario = context.Usuario.Find(id);
             return usuario != null ? Results.Ok(usuario) : Results.NotFound(MessageHelper.createMessage(false, "No se encontró el usuario"));
         };
+
         public static Func<Usuario, IResult> createUser = (Usuario _usuario) => {
             dbSGCSContext context = new dbSGCSContext();
             _usuario.Apellidos = ToUpperFirstLetter(_usuario.Apellidos.Trim());
@@ -28,6 +30,7 @@ namespace backendSGCS.Controllers
                 return Results.NotFound(MessageHelper.createMessage(false, "Error interno del servidor"));
             }
         };
+
         public static Func<int, Usuario, IResult> updateUser = (int id, Usuario usuario) => {
             dbSGCSContext context = new dbSGCSContext();
             var _usuario = context.Usuario.Find(id);
@@ -45,6 +48,7 @@ namespace backendSGCS.Controllers
                 return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar al usuario"));
             }
         };
+
         public static Func<int, Usuario, Task<IResult>> changePassword = async (int id, Usuario usuario) => {
             dbSGCSContext context = new dbSGCSContext();
             var _usuario = context.Usuario.Find(id);
@@ -61,6 +65,7 @@ namespace backendSGCS.Controllers
                 return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar cambiar la contraseña"));
             }
         };
+
         public static Func<int, IResult> deleteUser = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
             var user = context.Usuario.Find(id);
@@ -71,6 +76,7 @@ namespace backendSGCS.Controllers
             context.SaveChanges();
             return Results.Ok(MessageHelper.createMessage(true, "Usuario borrado exitosamente"));
         };
+
         private static Func<string, string> ToUpperFirstLetter = (string source) => {
             source = source.ToLower();
             string[] words = source.Split(' ');

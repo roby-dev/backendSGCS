@@ -11,15 +11,18 @@ namespace backendSGCS.Controllers {
             var savedFaseMetodologia = context.SaveChanges();
             return savedFaseMetodologia != 0 ? Results.Ok(_faseMetodologia) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear la fase de metdología"));
         };
+
         public static Func<List<FaseMetodologia>> getFaseMetodologias = () => {
             dbSGCSContext context = new dbSGCSContext();
             return context.FaseMetodologia.Include("IdMetodologiaNavigation").ToList();
         };
+
         public static Func<int, IResult> getFaseMetodologiaById = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
             var faseMetodologia = context.FaseMetodologia.Include("IdMetodologiaNavigation").Where(x => x.IdFaseMetodologia == id).FirstOrDefault();
             return faseMetodologia != null ? Results.Ok(faseMetodologia) : Results.NotFound(MessageHelper.createMessage(false, "No se encontró la fase de metdología"));
         };
+
         public static Func<int, IResult> deleteFaseMetodologia = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
             var faseMetodologia = context.FaseMetodologia.Find(id);
@@ -30,6 +33,7 @@ namespace backendSGCS.Controllers {
             context.SaveChanges();
             return Results.Ok(MessageHelper.createMessage(true, "Fase de metodología borrada exitosamente"));
         };
+
         public static Func<int, FaseMetodologia, Task<IResult>> updateFaseMetodologia = async (int id, FaseMetodologia faseMetodologia) => {
             dbSGCSContext context = new dbSGCSContext();
             var _faseMetodologia = context.FaseMetodologia.Find(id);

@@ -19,15 +19,18 @@ namespace backendSGCS.Controllers {
                 return Results.NotFound(MessageHelper.createMessage(false, "Error al crear el cargo"));
             }
         };
+
         public static Func<List<Cargo>> getCargos = () => {
             dbSGCSContext context = new dbSGCSContext();
             return context.Cargo.ToList();
         };
+
         public static Func<int, IResult> getCargoById = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
             var cargo = context.Cargo.Find(id);
             return cargo != null ? Results.Ok(cargo) : Results.NotFound(MessageHelper.createMessage(false, "No se encontró el cargo"));
         };
+
         public static Func<int, IResult> deleteCargo = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
             var cargo = context.Cargo.Find(id);
@@ -38,6 +41,7 @@ namespace backendSGCS.Controllers {
             context.SaveChanges();
             return Results.Ok(MessageHelper.createMessage(true, "Cargo borrado exitosamente"));
         };
+
         public static Func<int, Cargo, Task<IResult>> updateCargo = async (int id, Cargo _cargo) => {
             dbSGCSContext context = new dbSGCSContext();
             var cargo = context.Cargo.Find(id);

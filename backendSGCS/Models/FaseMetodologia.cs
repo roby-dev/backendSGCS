@@ -9,7 +9,6 @@ namespace backendSGCS.Models
         public FaseMetodologia()
         {
             Entregable = new HashSet<Entregable>();
-            LineaBase = new HashSet<LineaBase>();
         }
 
         public int IdFaseMetodologia { get; set; }
@@ -20,7 +19,5 @@ namespace backendSGCS.Models
         public virtual Metodologia IdMetodologiaNavigation { get; set; } = null!;
         [JsonIgnore]
         public virtual ICollection<Entregable> Entregable { get; set; }
-        [JsonIgnore]
-        public virtual ICollection<LineaBase> LineaBase { get; set; }
     }
 }
