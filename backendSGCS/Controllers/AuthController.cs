@@ -4,9 +4,8 @@ using backendSGCS.Models;
 namespace backendSGCS.Controllers {
     public class AuthController {
 
-        static dbSGCSContext context = new dbSGCSContext();
-
         public static Func<AuthHelper, IResult> login = (AuthHelper _body) => {
+            dbSGCSContext context = new dbSGCSContext();
             string email = _body.correo;
             string password = _body.clave;
             var user = context.Usuario.Where(x => x.Correo == email).FirstOrDefault();
@@ -19,6 +18,6 @@ namespace backendSGCS.Controllers {
             } else {
                 return Results.NotFound(MessageHelper.createMessage(false, "Clave incorrecta"));
             }
-        };        
+        };
     }
 }

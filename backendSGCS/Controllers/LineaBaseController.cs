@@ -1,51 +1,47 @@
 ﻿using backendSGCS.Helpers;
 using backendSGCS.Models;
 
-namespace backendSGCS.Controllers
-{
-    public class LineaBaseController
-    {
-        static dbSGCSContext context = new dbSGCSContext();
+namespace backendSGCS.Controllers {
+    public class LineaBaseController {
 
         public static Func<LineaBase, IResult> createLineaBase = (LineaBase _lineaBase) => {
+            dbSGCSContext context = new dbSGCSContext();
             context.LineaBase.Add(_lineaBase);
             var savedLineaBase = context.SaveChanges();
             return savedLineaBase != 0 ? Results.Ok(_lineaBase) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear la linea base"));
         };
-        public static Func<List<LineaBase>> getLineaBases = () => context.LineaBase.ToList();
+        public static Func<List<LineaBase>> getLineaBases = () => {
+            dbSGCSContext context = new dbSGCSContext();
+            return context.LineaBase.ToList();
+        };
         public static Func<int, IResult> getLineaBaseById = (int id) => {
+            dbSGCSContext context = new dbSGCSContext();
             var lineaBase = context.LineaBase.Find(id);
             return lineaBase != null ? Results.Ok(lineaBase) : Results.NotFound(MessageHelper.createMessage(false, "No se encontró la linea base"));
         };
-
         public static Func<int, IResult> deleteLineaBase = (int id) => {
+            dbSGCSContext context = new dbSGCSContext();
             var lineaBase = context.LineaBase.Find(id);
-            if (lineaBase == null)
-            {
+            if (lineaBase == null) {
                 return Results.NotFound(MessageHelper.createMessage(false, "No se encontró la linea base"));
             }
             context.LineaBase.Remove(lineaBase);
             context.SaveChanges();
             return Results.Ok(MessageHelper.createMessage(true, "Linea base borrada exitosamente"));
         };
-
         public static Func<int, LineaBase, Task<IResult>> updateLineaBase = async (int id, LineaBase lineaBase) => {
+            dbSGCSContext context = new dbSGCSContext();
             var _lineaBase = context.LineaBase.Find(id);
-            if (_lineaBase == null)
-            {
+            if (_lineaBase == null) {
                 return Results.NotFound(MessageHelper.createMessage(false, "No se encontró la linea base"));
             }
-            try
-            {
+            try {
                 context.Entry(_lineaBase).CurrentValues.SetValues(lineaBase);
                 await context.SaveChangesAsync();
                 return Results.Ok(_lineaBase);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar la linea base"));
             }
         };
-
     }
 }

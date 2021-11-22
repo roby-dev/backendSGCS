@@ -42,8 +42,8 @@ app.MapGet("/api/usuarios",UsuarioController.getUsers);
 app.MapGet("/api/usuarios/{id:int}", (int id) => UsuarioController.getUserById(id));
 app.MapPost("/api/usuarios", (Usuario _usuario) => UsuarioController.createUser(_usuario));
 app.MapDelete("/api/usuarios/{id:int}", (int id) => UsuarioController.deleteUser(id));
-app.MapPut("/api/usuarios/{id:int}", async ([FromRoute] int id,
-                                        [FromBody] Usuario _usuario) => await UsuarioController.updateUser(id, _usuario));
+app.MapPut("/api/usuarios/{id:int}", ([FromRoute] int id,
+                                        [FromBody] Usuario _usuario) => UsuarioController.updateUser(id, _usuario));
 
 app.MapPut("/api/usuarios/cambiarClave/{id:int}", async ([FromRoute] int id,
                                         [FromBody] Usuario _usuario) => await UsuarioController.changePassword(id, _usuario));

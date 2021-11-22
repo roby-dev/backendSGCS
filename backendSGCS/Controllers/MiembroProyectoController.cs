@@ -1,14 +1,11 @@
 ﻿using backendSGCS.Helpers;
 using backendSGCS.Models;
-using Microsoft.EntityFrameworkCore;
 
-namespace backendSGCS.Controllers
-{
-    public class MiembroProyectoController
-    {
-        static dbSGCSContext context = new dbSGCSContext();
+namespace backendSGCS.Controllers {
+    public class MiembroProyectoController {
 
         public static Func<int, IResult> getMemberById = (int id) => {
+            dbSGCSContext context = new dbSGCSContext();
             try {
                 var miembroProyecto = context.MiembroProyecto.Where(x => x.IdMiembroProyecto == id).First();
                 return Results.Ok(miembroProyecto);
@@ -16,8 +13,8 @@ namespace backendSGCS.Controllers
                 return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el miembro del proyecto"));
             }
         };
-
         public static Func<MiembroProyecto, IResult> createMember = (MiembroProyecto _member) => {
+            dbSGCSContext context = new dbSGCSContext();
             try {
                 context.MiembroProyecto.Add(_member);
                 var savedMember = context.SaveChanges();
@@ -26,10 +23,12 @@ namespace backendSGCS.Controllers
                 return Results.NotFound(MessageHelper.createMessage(false, "Error interno del servidor"));
             }
         };
-
-        public static Func<List<MiembroProyecto>> getMembers = () => context.MiembroProyecto.ToList();
-
+        public static Func<List<MiembroProyecto>> getMembers = () => {
+            dbSGCSContext context = new dbSGCSContext();
+            return context.MiembroProyecto.ToList();
+        };
         public static Func<int, IResult> deleteMember = (int id) => {
+            dbSGCSContext context = new dbSGCSContext();
             var member = context.MiembroProyecto.Find(id);
             if (member == null) {
                 return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el miembro del proyecto"));
@@ -38,17 +37,17 @@ namespace backendSGCS.Controllers
             context.SaveChanges();
             return Results.Ok(MessageHelper.createMessage(true, "Miembro del proyecto borrado exitosamente"));
         };
-
-        internal static object getMembersByProject(int id) {
+        public static Func<int, IResult> getMembersByProject = (int id) => {
+            dbSGCSContext context = new dbSGCSContext();
             try {
-                var miembrosProyecto = context.MiembroProyecto.Where(x => x.IdProyecto == id);
+                var miembrosProyecto = context.MiembroProyecto.Where(x => x.IdProyecto == id).ToList();
                 return Results.Ok(miembrosProyecto);
             } catch (Exception) {
                 return Results.NotFound(MessageHelper.createMessage(false, "No se encontraron miembros para este proyecto"));
             }
-        }
-
+        };
         public static Func<int, MiembroProyecto, Task<IResult>> updateMember = async (int id, MiembroProyecto miembro) => {
+            dbSGCSContext context = new dbSGCSContext();
             var _miembro = context.MiembroProyecto.Find(id);
             if (_miembro == null) {
                 return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el miembro del proyecto"));

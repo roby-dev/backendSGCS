@@ -1,29 +1,28 @@
 ﻿using backendSGCS.Helpers;
 using backendSGCS.Models;
 
-namespace backendSGCS.Controllers
-{
-    public class ElementoConfiguracionController
-    {
-
-
-        static dbSGCSContext context = new dbSGCSContext();
-
+namespace backendSGCS.Controllers {
+    public class ElementoConfiguracionController {
         public static Func<ElementoConfiguracion, IResult> createElementoConfiguracion = (ElementoConfiguracion _elementoConfiguracion) => {
+            dbSGCSContext context = new dbSGCSContext();
             context.ElementoConfiguracion.Add(_elementoConfiguracion);
             var savedElementoConfiguracion = context.SaveChanges();
             return savedElementoConfiguracion != 0 ? Results.Ok(_elementoConfiguracion) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear el elemento de configuración"));
         };
-        public static Func<List<ElementoConfiguracion>> getElementoConfiguracions = () => context.ElementoConfiguracion.ToList();
+        public static Func<List<ElementoConfiguracion>> getElementoConfiguracions = () => {
+            dbSGCSContext context = new dbSGCSContext();
+            return context.ElementoConfiguracion.ToList();
+        };
         public static Func<int, IResult> getElementoConfiguracionById = (int id) => {
+            dbSGCSContext context = new dbSGCSContext();
             var elementoConfiguracion = context.ElementoConfiguracion.Find(id);
             return elementoConfiguracion != null ? Results.Ok(elementoConfiguracion) : Results.NotFound(MessageHelper.createMessage(false, "No se encontró el elemento de configuración"));
         };
 
         public static Func<int, IResult> deleteElementoConfiguracion = (int id) => {
+            dbSGCSContext context = new dbSGCSContext();
             var elementoConfiguracion = context.ElementoConfiguracion.Find(id);
-            if (elementoConfiguracion == null)
-            {
+            if (elementoConfiguracion == null) {
                 return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el elemento de configuración"));
             }
             context.ElementoConfiguracion.Remove(elementoConfiguracion);
@@ -32,22 +31,18 @@ namespace backendSGCS.Controllers
         };
 
         public static Func<int, ElementoConfiguracion, Task<IResult>> updateElementoConfiguracion = async (int id, ElementoConfiguracion elementoConfiguracion) => {
+            dbSGCSContext context = new dbSGCSContext();
             var _elementoConfiguracion = context.ElementoConfiguracion.Find(id);
-            if (_elementoConfiguracion == null)
-            {
+            if (_elementoConfiguracion == null) {
                 return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el elemento de configuración"));
             }
-            try
-            {
+            try {
                 context.Entry(_elementoConfiguracion).CurrentValues.SetValues(elementoConfiguracion);
                 await context.SaveChangesAsync();
                 return Results.Ok(_elementoConfiguracion);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar el elemento de configuración"));
             }
         };
-
     }
 }

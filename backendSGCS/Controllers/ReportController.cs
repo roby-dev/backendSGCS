@@ -2,9 +2,9 @@
 
 namespace backendSGCS.Controllers {
     public class ReportController {
-        static dbSGCSContext context = new dbSGCSContext();
 
         public static Func<IResult> getAllTotal = () => {
+            dbSGCSContext context = new dbSGCSContext();
             dynamic Result = new System.Dynamic.ExpandoObject();
             Result.cantidadCargo = context.Cargo.ToList().Count;
             Result.cantidadElementoConfiguracion = context.ElementoConfiguracion.ToList().Count;
