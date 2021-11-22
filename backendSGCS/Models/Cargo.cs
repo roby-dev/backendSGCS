@@ -11,7 +11,7 @@ namespace backendSGCS.Models
             MiembroProyecto = new HashSet<MiembroProyecto>();
         }
 
-        public int IdCargo { get; set; }        
+        public int IdCargo { get; set; }
         public string Nombre { get; set; } = null!;
         [JsonIgnore]
         public virtual ICollection<MiembroProyecto> MiembroProyecto { get; set; }

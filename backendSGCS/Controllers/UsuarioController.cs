@@ -2,7 +2,6 @@
 using backendSGCS.Models;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace backendSGCS.Controllers
 {
     public class UsuarioController {
@@ -19,8 +18,8 @@ namespace backendSGCS.Controllers
         public static Func<Usuario, IResult> createUser = (Usuario _usuario) => {
             dbSGCSContext context = new dbSGCSContext();
             _usuario.Apellidos = ToUpperFirstLetter(_usuario.Apellidos.Trim());
-            _usuario.Nombres = ToUpperFirstLetter(_usuario.Nombres.Trim());        
-            _usuario.Clave = BCrypt.Net.BCrypt.HashPassword(_usuario.Clave);             
+            _usuario.Nombres = ToUpperFirstLetter(_usuario.Nombres.Trim());
+            _usuario.Clave = BCrypt.Net.BCrypt.HashPassword(_usuario.Clave);
             try {
                 context.Usuario.Add(_usuario);
                 var savedUser = context.SaveChanges();
@@ -29,7 +28,7 @@ namespace backendSGCS.Controllers
                 return Results.NotFound(MessageHelper.createMessage(false, "Error interno del servidor"));
             }
         };
-        public static Func<int, Usuario, IResult> updateUser =  (int id, Usuario usuario) => {
+        public static Func<int, Usuario, IResult> updateUser = (int id, Usuario usuario) => {
             dbSGCSContext context = new dbSGCSContext();
             var _usuario = context.Usuario.Find(id);
             if (_usuario == null) {
@@ -38,7 +37,7 @@ namespace backendSGCS.Controllers
             try {
                 usuario.Clave = _usuario.Clave;
                 usuario.Apellidos = ToUpperFirstLetter(usuario.Apellidos.Trim());
-                usuario.Nombres = ToUpperFirstLetter(usuario.Nombres.Trim());               
+                usuario.Nombres = ToUpperFirstLetter(usuario.Nombres.Trim());
                 context.Entry(_usuario).CurrentValues.SetValues(usuario);
                 context.SaveChanges();
                 return Results.Ok(_usuario);

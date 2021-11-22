@@ -43,6 +43,9 @@ namespace backendSGCS.Models
                 entity.HasKey(e => e.IdCargo)
                     .HasName("PK_CARGO");
 
+                entity.HasIndex(e => e.Nombre, "UQ_NameCargo")
+                    .IsUnique();
+
                 entity.Property(e => e.IdCargo).HasColumnName("idCargo");
 
                 entity.Property(e => e.Nombre)
@@ -168,7 +171,8 @@ namespace backendSGCS.Models
                 entity.Property(e => e.IdLineaBase).HasColumnName("idLineaBase");
 
                 entity.Property(e => e.Fecha)
-                    .HasColumnType("date")
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
                     .HasColumnName("fecha");
 
                 entity.Property(e => e.IdFaseMetodologia).HasColumnName("idFaseMetodologia");
@@ -338,10 +342,10 @@ namespace backendSGCS.Models
                 entity.HasKey(e => e.IdUsuario)
                     .HasName("PK_USUARIO");
 
-                entity.HasIndex(e => e.Correo, "UQ__Usuario__2A586E0BBE6F04E2")
+                entity.HasIndex(e => e.Correo, "UQ__Usuario__2A586E0B7635ACCA")
                     .IsUnique();
 
-                entity.HasIndex(e => e.Celular, "UQ__Usuario__2E4973E77D8EF387")
+                entity.HasIndex(e => e.Celular, "UQ__Usuario__2E4973E724A8E90A")
                     .IsUnique();
 
                 entity.Property(e => e.IdUsuario).HasColumnName("idUsuario");

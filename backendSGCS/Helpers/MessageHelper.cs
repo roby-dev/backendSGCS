@@ -1,6 +1,4 @@
-﻿using backendSGCS.Models;
-
-namespace backendSGCS.Helpers
+﻿namespace backendSGCS.Helpers
 {
     public class MessageHelper
     {

@@ -3,7 +3,7 @@ using backendSGCS.Models;
 
 namespace backendSGCS.Controllers {
     public class SolicitudController {
-        
+
         public static Func<Solicitud, IResult> createSolicitud = (Solicitud _solicitud) => {
             dbSGCSContext context = new dbSGCSContext();
             context.Solicitud.Add(_solicitud);

@@ -17,7 +17,7 @@ namespace backendSGCS.Controllers {
         };
         public static Func<int, IResult> getFaseMetodologiaById = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
-            var faseMetodologia = context.FaseMetodologia.Include("IdMetodologiaNavigation").Where(x=>x.IdFaseMetodologia==id).FirstOrDefault();
+            var faseMetodologia = context.FaseMetodologia.Include("IdMetodologiaNavigation").Where(x => x.IdFaseMetodologia == id).FirstOrDefault();
             return faseMetodologia != null ? Results.Ok(faseMetodologia) : Results.NotFound(MessageHelper.createMessage(false, "No se encontró la fase de metdología"));
         };
         public static Func<int, IResult> deleteFaseMetodologia = (int id) => {

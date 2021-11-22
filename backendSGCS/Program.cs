@@ -1,7 +1,6 @@
 using backendSGCS.Controllers;
 using backendSGCS.Helpers;
 using backendSGCS.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json.Serialization;
 
@@ -23,7 +22,6 @@ if (!app.Environment.IsDevelopment()) {
 }
 app.UseSwagger();
 app.UseSwaggerUI();
-//wd1app.UseMiddleware();
 
 /// <Default>
 /// Ruta principal del backend
@@ -38,7 +36,7 @@ app.MapPost("/api/login", ([FromBody] AuthHelper body) => AuthController.login(b
 /// < Model >
 /// Rutas para el CRUD del modelo Usuario
 /// </Model>
-app.MapGet("/api/usuarios",UsuarioController.getUsers);
+app.MapGet("/api/usuarios", UsuarioController.getUsers);
 app.MapGet("/api/usuarios/{id:int}", (int id) => UsuarioController.getUserById(id));
 app.MapPost("/api/usuarios", (Usuario _usuario) => UsuarioController.createUser(_usuario));
 app.MapDelete("/api/usuarios/{id:int}", (int id) => UsuarioController.deleteUser(id));

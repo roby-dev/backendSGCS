@@ -1,5 +1,6 @@
 ﻿using backendSGCS.Helpers;
 using backendSGCS.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace backendSGCS.Controllers {
     public class EntregableController {
@@ -12,11 +13,11 @@ namespace backendSGCS.Controllers {
         };
         public static Func<List<Entregable>> getEntregables = () => {
             dbSGCSContext context = new dbSGCSContext();
-            return context.Entregable.ToList();
+            return context.Entregable.Include("IdFaseMetodologiaNavigation.IdMetodologiaNavigation").ToList();
         };
         public static Func<int, IResult> getEntregableById = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
-            var entregable = context.Entregable.Find(id);
+            var entregable = context.Entregable.Include("IdFaseMetodologiaNavigation.IdMetodologiaNavigation").Where(x=>x.IdEntregable==id).FirstOrDefault();
             return entregable != null ? Results.Ok(entregable) : Results.NotFound(MessageHelper.createMessage(false, "No se encontró el entregable"));
         };
         public static Func<int, IResult> deleteEntregable = (int id) => {
