@@ -42,9 +42,11 @@ namespace backendSGCS.Controllers {
                         var elemento = context.ElementoConfiguracion.Include("IdLineaBaseNavigation.IdEntregableNavigation.IdFaseMetodologiaNavigation")
                                                                     .Include("IdLineaBaseNavigation.IdProyectoNavigation.IdMetodologiaNavigation")
                                                                     .Where(x => x.IdLineaBaseNavigation.IdProyectoNavigation.IdProyecto == miembro.IdProyecto)
-                                                                    .FirstOrDefault();
-                        if (elemento != null) { 
-                            elementos.Add(elemento);
+                                                                    .ToList();
+                        if (elemento != null) {
+                            elemento.ForEach(x => {
+                                elementos.Add(x);
+                            });                            
                         }                                                                    
                     }
                 });
