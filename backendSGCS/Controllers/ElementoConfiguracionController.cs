@@ -23,7 +23,42 @@ namespace backendSGCS.Controllers {
                                                 .ToList();
         };
 
-        public static Func<int, IResult> getElementoConfiguracionById = (int _id) => {
+        public static Func<int,IResult> getElementsByProjectByUser = (int _id) => {
+            try {
+                dbSGCSContext context = new dbSGCSContext();
+                var miembroProyectos = context.MiembroProyecto.Include("IdCargoNavigation")
+                                                     .Include("IdProyectoNavigation.IdMetodologiaNavigation")
+                                                     .Include("IdUsuarioNavigation")
+                                                     .Where(x => x.IdUsuario == _id)                                                     
+                                                     .ToList();
+                if (miembroProyectos is null) {
+                    return Results.NotFound(MessageHelper.createMessage(false, "No se encontraron proyectos"));
+                }
+
+                List<ElementoConfiguracion> elementos = new List<ElementoConfiguracion>();
+
+                miembroProyectos.ForEach(miembro => {
+                    if (miembro.IdUsuario == _id) {
+                        var elemento = context.ElementoConfiguracion.Include("IdLineaBaseNavigation.IdEntregableNavigation.IdFaseMetodologiaNavigation")
+                                                                    .Include("IdLineaBaseNavigation.IdProyectoNavigation.IdMetodologiaNavigation")
+                                                                    .Where(x => x.IdLineaBaseNavigation.IdProyectoNavigation.IdProyecto == miembro.IdProyecto)
+                                                                    .FirstOrDefault();
+                        if (elemento != null) { 
+                            elementos.Add(elemento);
+                        }                                                                    
+                    }
+                });
+
+                if (elementos.Count==0) {
+                    return Results.NotFound(MessageHelper.createMessage(false, "No se encontraron elementos para los proyectos de este usuario"));
+                }
+                return Results.Ok(elementos);
+            } catch (Exception) {
+                return Results.NotFound(MessageHelper.createMessage(false, "Error interno"));
+            }
+        };
+
+        public static Func<int, IResult> getElementById = (int _id) => {
             using dbSGCSContext context = new();
             ElementoConfiguracion? elementoConfiguracion = context.ElementoConfiguracion
                                                                   .Include("IdLineaBaseNavigation.IdEntregableNavigation.IdFaseMetodologiaNavigation")
@@ -34,6 +69,19 @@ namespace backendSGCS.Controllers {
                 return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el elemento de configuración"));
             }
             return Results.Ok(elementoConfiguracion);
+        };
+
+        public static Func<int, IResult> getElementsByProject = (int _id) => {
+            using dbSGCSContext context = new();
+            List<ElementoConfiguracion>? elementosConfiguracion = context.ElementoConfiguracion
+                                                                  .Include("IdLineaBaseNavigation.IdEntregableNavigation.IdFaseMetodologiaNavigation")
+                                                                  .Include("IdLineaBaseNavigation.IdProyectoNavigation.IdMetodologiaNavigation")
+                                                                  .Where(x => x.IdLineaBaseNavigation.IdProyecto == _id)
+                                                                  .ToList();
+            if (elementosConfiguracion is null) {
+                return Results.NotFound(MessageHelper.createMessage(false, "No se encontraron elementos de configuración para este proyecto"));
+            }
+            return Results.Ok(elementosConfiguracion);
         };
 
         public static Func<int, IResult> deleteElementoConfiguracion = (int id) => {

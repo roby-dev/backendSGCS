@@ -48,17 +48,38 @@ namespace backendSGCS.Controllers {
             return Results.Ok(MessageHelper.createMessage(true, "Miembro del proyecto borrado exitosamente"));
         };
 
-        public static Func<int, IResult> getMembersByProject = (int _id) => {
-            dbSGCSContext context = new dbSGCSContext();
+        public static Func<int, IResult> getMembersByProject = (int _id) => {           
             try {
+                dbSGCSContext context = new dbSGCSContext();
                 var miembroProyecto = context.MiembroProyecto.Where(x => x.IdProyecto == _id)
                                                         .Include("IdCargoNavigation")
                                                         .Include("IdProyectoNavigation.IdMetodologiaNavigation")
                                                         .Include("IdUsuarioNavigation")
                                                         .FirstOrDefault();
+                if(miembroProyecto is null) {
+                    return Results.NotFound(MessageHelper.createMessage(false, "No se encontro miembros para ese proyecto"));
+                }
                 return Results.Ok(miembroProyecto);
             } catch (Exception) {
-                return Results.NotFound(MessageHelper.createMessage(false, "No se encontraron miembros para este proyecto"));
+                return Results.NotFound(MessageHelper.createMessage(false, "Error con la base de datos"));
+            }
+        };
+
+        public static Func<int, IResult> getProyectsByUser = (int _id) => {
+            try {
+                dbSGCSContext context = new dbSGCSContext();
+                var projects = context.MiembroProyecto.Include("IdCargoNavigation")
+                                                      .Include("IdProyectoNavigation.IdMetodologiaNavigation")
+                                                      .Include("IdUsuarioNavigation")
+                                                      .Where(x => x.IdUsuario == _id)
+                                                      .Select(x => x.IdProyectoNavigation)
+                                                      .ToList();
+                if (projects is null) {
+                    return Results.NotFound(MessageHelper.createMessage(false, "No se encontraron proyectos para ese usuario"));
+                }
+                return Results.Ok(projects);                
+            } catch (Exception) {
+                return Results.NotFound(MessageHelper.createMessage(false, "Error interno"));
             }
         };
 

@@ -52,6 +52,7 @@ app.MapPut("/api/usuarios/cambiarClave/{id:int}", async ([FromRoute] int id,
 app.MapGet("/api/miembros", MiembroProyectoController.getMembers);
 app.MapGet("/api/miembros/{id:int}", (int id) => MiembroProyectoController.getMemberById(id));
 app.MapGet("/api/miembros/proyecto/{id:int}", (int id) => MiembroProyectoController.getMembersByProject(id));
+app.MapGet("/api/miembros/proyecto/usuario/{id:int}", (int id) => MiembroProyectoController.getProyectsByUser(id));
 app.MapPost("/api/miembros", (MiembroProyecto _miembroProyecto) => MiembroProyectoController.createMember(_miembroProyecto));
 app.MapDelete("/api/miembros/{id:int}", (int id) => MiembroProyectoController.deleteMember(id));
 app.MapPut("/api/miembros/{id:int}", async ([FromRoute] int id,
@@ -71,7 +72,9 @@ app.MapPut("/api/cargos/{id:int}", async ([FromRoute] int id,
 /// Rutas para el CRUD del modelo ElementoConfiguracion
 /// </Model>
 app.MapGet("/api/elementosConfiguracion", ElementoConfiguracionController.getElementoConfiguracions);
-app.MapGet("/api/elementosConfiguracion/{id:int}", (int id) => ElementoConfiguracionController.getElementoConfiguracionById(id));
+app.MapGet("/api/elementosConfiguracion/{id:int}", (int id) => ElementoConfiguracionController.getElementById(id));
+app.MapGet("/api/elementosConfiguracion/proyectos/usuario/{id:int}", (int id) => ElementoConfiguracionController.getElementsByProjectByUser(id));
+app.MapGet("/api/elementosConfiguracion/proyecto/{id:int}", (int id) => ElementoConfiguracionController.getElementsByProject(id));
 app.MapPost("/api/elementosConfiguracion", (ElementoConfiguracion _elementoConfiguracion) => ElementoConfiguracionController.createElementoConfiguracion(_elementoConfiguracion));
 app.MapDelete("/api/elementosConfiguracion/{id:int}", (int id) => ElementoConfiguracionController.deleteElementoConfiguracion(id));
 app.MapPut("/api/elementosConfiguracion/{id:int}", async ([FromRoute] int id,
