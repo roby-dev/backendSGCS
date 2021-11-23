@@ -52,7 +52,7 @@ app.MapPut("/api/usuarios/cambiarClave/{id:int}", async ([FromRoute] int id,
 app.MapGet("/api/miembros", MiembroProyectoController.getMembers);
 app.MapGet("/api/miembros/{id:int}", (int id) => MiembroProyectoController.getMemberById(id));
 app.MapGet("/api/miembros/proyecto/{id:int}", (int id) => MiembroProyectoController.getMembersByProject(id));
-app.MapGet("/api/miembros/proyecto/usuario/{id:int}", (int id) => MiembroProyectoController.getProyectsByUser(id));
+app.MapGet("/api/miembros/proyectos/usuario/{id:int}", (int id) => MiembroProyectoController.getProyectsByUser(id));
 app.MapPost("/api/miembros", (MiembroProyecto _miembroProyecto) => MiembroProyectoController.createMember(_miembroProyecto));
 app.MapDelete("/api/miembros/{id:int}", (int id) => MiembroProyectoController.deleteMember(id));
 app.MapPut("/api/miembros/{id:int}", async ([FromRoute] int id,

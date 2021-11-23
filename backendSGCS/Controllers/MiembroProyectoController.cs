@@ -74,7 +74,7 @@ namespace backendSGCS.Controllers {
                                                       .Where(x => x.IdUsuario == _id)
                                                       .Select(x => x.IdProyectoNavigation)
                                                       .ToList();
-                if (projects is null) {
+                if (projects.Count==0) {
                     return Results.NotFound(MessageHelper.createMessage(false, "No se encontraron proyectos para ese usuario"));
                 }
                 return Results.Ok(projects);                
