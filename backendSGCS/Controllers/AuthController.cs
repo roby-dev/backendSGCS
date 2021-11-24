@@ -1,5 +1,6 @@
 ﻿using backendSGCS.Helpers;
 using backendSGCS.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace backendSGCS.Controllers {
     public class AuthController {
@@ -16,6 +17,23 @@ namespace backendSGCS.Controllers {
                     : user.Estado ? Results.Ok(user) : Results.NotFound(MessageHelper.createMessage(false, "usuario inactivo"));
             }
             return Results.NotFound(MessageHelper.createMessage(false, "no existe el correo electrónico"));
+        };
+
+        public static Func<int, string, IResult> changePassword = (int id, string clave) => {
+            dbSGCSContext _context = new();
+            var _usuario = _context.Usuario.Find(id);
+            if (_usuario is null) {
+                return Results.BadRequest(MessageHelper.createMessage(false, "Error al intentar actualizar usuario."));
+            }
+            _usuario.Clave = BCrypt.Net.BCrypt.HashPassword(clave);
+            _context.Entry(_usuario).State = EntityState.Modified;
+            try {
+                _context.SaveChanges();
+            } catch (DbUpdateConcurrencyException) {
+                return Results.BadRequest(MessageHelper.createMessage(false, "Error al intentar actualizar usuario."));
+
+            }
+            return Results.Ok(_usuario);
         };
     }
 }

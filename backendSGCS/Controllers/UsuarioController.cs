@@ -52,28 +52,7 @@ namespace backendSGCS.Controllers {
             }
             return usuario;
         }
-
-        [HttpPut("cambiarClave/{id:int:required}")]
-        public async Task<ActionResult<Usuario>> changePassword(int id, Usuario usuario) {
-            var _usuario = await _context.Usuario.FindAsync(id);
-            if (id != usuario.IdUsuario || _usuario is null) {
-                return BadRequest(MessageHelper.createMessage(false, "Error al intentar actualizar usuario."));
-            }
-            _usuario.Clave = BCrypt.Net.BCrypt.HashPassword(usuario.Clave);
-            usuario = _usuario;
-            _context.Entry(usuario).State = EntityState.Modified;
-            try {
-                await _context.SaveChangesAsync();
-            } catch (DbUpdateConcurrencyException) {
-                if (!UsuarioExists(id)) {
-                    return NotFound(MessageHelper.createMessage(false, "No se encontró usuario."));
-                } else {
-                    return BadRequest(MessageHelper.createMessage(false, "Error al intentar actualizar usuario."));
-                }
-            }
-            return usuario;
-        }
-
+  
         // POST: api/usuarios
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]

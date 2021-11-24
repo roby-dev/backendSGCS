@@ -51,6 +51,8 @@ app.MapGet("/", () => Results.LocalRedirect("~/swagger/index.html"));
 /// Rutas para Logearse a la aplicación
 /// </Login>
 app.MapPost("/api/login", ([FromBody] AuthHelper body) => AuthController.login(body));
+app.MapPut("/api/usuarios/cambiarClave/{id:int}", ([FromRoute] int id,
+                                        [FromBody] string clave) => AuthController.changePassword(id, clave));
 
 
 /// <Model>
