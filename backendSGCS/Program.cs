@@ -19,7 +19,9 @@ builder.Services.Configure<JsonOptions>(options =>
 builder.Services.AddCors(options => {
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       builder => {
-                          builder.WithOrigins("*");
+                          builder.AllowAnyOrigin();
+                          builder.AllowAnyMethod();
+                          builder.AllowAnyHeader();
                       });
 });
 
@@ -30,7 +32,7 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment()) {
     app.UseExceptionHandler("/oops");
 }
-app.UseCors();
+app.UseCors(MyAllowSpecificOrigins);
 app.UseSwagger();
 app.UseSwaggerUI();
 
