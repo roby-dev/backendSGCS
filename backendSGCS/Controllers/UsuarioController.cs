@@ -1,84 +1,106 @@
 ﻿using backendSGCS.Helpers;
 using backendSGCS.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace backendSGCS.Controllers
-{
-    public class UsuarioController {
+namespace backendSGCS.Controllers {
+    [Route("api/usuarios")]
+    [ApiController]
+    public class UsuarioController : ControllerBase {
+        private readonly dbSGCSContext _context;
 
-        public static Func<List<Usuario>> getUsers = () => {
-            dbSGCSContext context = new dbSGCSContext();
-            return context.Usuario.ToList();
-        };
+        public UsuarioController(dbSGCSContext context) {
+            _context = context;
+        }
 
-        public static Func<int, IResult> getUserById = (int _id) => {
-            dbSGCSContext context = new dbSGCSContext();
-            var usuario = context.Usuario.Find(_id);
-            if(usuario is null) {
-                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el usuario"));
+        // GET: api/usuarios
+        [HttpGet("")]
+        public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuario() {
+            return await _context.Usuario.ToListAsync();
+        }
+
+        // GET: api/usuarios/5
+        [HttpGet("{id:int:required}")]
+        public async Task<ActionResult<Usuario>> GetUsuario(int id) {
+            var usuario = await _context.Usuario.FindAsync(id);
+            if (usuario is null) {
+                return NotFound(MessageHelper.createMessage(false, "No se encontró el usuario"));
             }
-            return Results.Ok(usuario);
-        };
+            return usuario;
+        }
 
-        public static Func<Usuario, IResult> createUser = (Usuario _usuario) => {           
+        // PUT: api/usuarios/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id:int:required}")]
+        public async Task<ActionResult<Usuario>> PutUsuario(int id, Usuario usuario) {
+            var _usuario = await _context.Usuario.FindAsync(id);
+            if (id != usuario.IdUsuario || _usuario is null) {
+                return BadRequest(MessageHelper.createMessage(false, "Error al intentar actualizar usuario."));
+            }            
+            usuario.Clave = _usuario.Clave;
+            usuario.Apellidos = ToUpperFirstLetter(usuario.Apellidos.Trim());
+            usuario.Nombres = ToUpperFirstLetter(usuario.Nombres.Trim());
+            _context.Entry(_usuario).CurrentValues.SetValues(usuario);
             try {
-                dbSGCSContext context = new dbSGCSContext();
-                _usuario.Apellidos = ToUpperFirstLetter(_usuario.Apellidos.Trim());
-                _usuario.Nombres = ToUpperFirstLetter(_usuario.Nombres.Trim());
-                _usuario.Clave = BCrypt.Net.BCrypt.HashPassword(_usuario.Clave);
-                context.Usuario.Add(_usuario);
-                var savedUser = context.SaveChanges();
-                return savedUser != 0 ? Results.Ok(_usuario) : Results.NotFound(MessageHelper.createMessage(false, "Error al crear el usuario"));
-            } catch (Exception) {
-                return Results.NotFound(MessageHelper.createMessage(false, "Error interno del servidor"));
-            }
-        };
-
-        public static Func<int, Usuario, IResult> updateUser = (int _id, Usuario usuario) => {            
-            try {
-                dbSGCSContext context = new dbSGCSContext();
-                var _usuario = context.Usuario.Find(_id);
-                if (_usuario == null) {
-                    return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el usuario"));
+                await _context.SaveChangesAsync();
+            } catch (DbUpdateConcurrencyException) {
+                if (!UsuarioExists(id)) {
+                    return NotFound(MessageHelper.createMessage(false, "No se encontró usuario."));
+                } else {
+                    return BadRequest(MessageHelper.createMessage(false, "Error al intentar actualizar usuario."));
                 }
-                usuario.Clave = _usuario.Clave;
-                usuario.Apellidos = ToUpperFirstLetter(usuario.Apellidos.Trim());
-                usuario.Nombres = ToUpperFirstLetter(usuario.Nombres.Trim());
-                context.Entry(_usuario).CurrentValues.SetValues(usuario);
-                context.SaveChanges();
-                return Results.Ok(_usuario);
-            } catch (Exception) {
-                return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar al usuario"));
             }
-        };
+            return usuario;
+        }
 
-        public static Func<int, Usuario, Task<IResult>> changePassword = async (int _id, Usuario usuario) => {           
+        [HttpPut("cambiarClave/{id:int:required}")]
+        public async Task<ActionResult<Usuario>> changePassword(int id, Usuario usuario) {
+            var _usuario = await _context.Usuario.FindAsync(id);
+            if (id != usuario.IdUsuario || _usuario is null) {
+                return BadRequest(MessageHelper.createMessage(false, "Error al intentar actualizar usuario."));
+            }
+            _usuario.Clave = BCrypt.Net.BCrypt.HashPassword(usuario.Clave);
+            usuario = _usuario;
+            _context.Entry(usuario).State = EntityState.Modified;
             try {
-                dbSGCSContext context = new dbSGCSContext();
-                var _usuario = context.Usuario.Find(_id);
-                if (_usuario is null) {
-                    return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el usuario"));
+                await _context.SaveChangesAsync();
+            } catch (DbUpdateConcurrencyException) {
+                if (!UsuarioExists(id)) {
+                    return NotFound(MessageHelper.createMessage(false, "No se encontró usuario."));
+                } else {
+                    return BadRequest(MessageHelper.createMessage(false, "Error al intentar actualizar usuario."));
                 }
-                _usuario.Clave = BCrypt.Net.BCrypt.HashPassword(usuario.Clave);
-                usuario = _usuario;
-                context.Entry(_usuario).CurrentValues.SetValues(usuario);
-                await context.SaveChangesAsync();
-                return Results.Ok(_usuario);
-            } catch (Exception) {
-                return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar cambiar la contraseña"));
             }
-        };
+            return usuario;
+        }
 
-        public static Func<int, IResult> deleteUser = (int _id) => {
-            dbSGCSContext context = new dbSGCSContext();
-            var user = context.Usuario.Find(_id);
-            if (user is null) {
-                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el usuario"));
+        // POST: api/usuarios
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Usuario>> PostUsuario(Usuario usuario) {
+            usuario.Apellidos = ToUpperFirstLetter(usuario.Apellidos.Trim());
+            usuario.Nombres = ToUpperFirstLetter(usuario.Nombres.Trim());
+            usuario.Clave = BCrypt.Net.BCrypt.HashPassword(usuario.Clave);
+            _context.Usuario.Add(usuario);
+            await _context.SaveChangesAsync();
+            return usuario;
+        }
+
+        // DELETE: api/usuarios/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUsuario(int id) {
+            var usuario = await _context.Usuario.FindAsync(id);
+            if (usuario is null) {
+                return NotFound(MessageHelper.createMessage(false, "No se encontró usuario."));
             }
-            context.Usuario.Remove(user);
-            context.SaveChanges();
-            return Results.Ok(MessageHelper.createMessage(true, "Usuario borrado exitosamente"));
-        };
+            _context.Usuario.Remove(usuario);
+            await _context.SaveChangesAsync();
+            return Ok(MessageHelper.createMessage(true, "Usuario borrado correctamente"));
+        }
+
+        private bool UsuarioExists(int id) {
+            return _context.Usuario.Any(e => e.IdUsuario == id);
+        }
 
         private static Func<string, string> ToUpperFirstLetter = (string source) => {
             source = source.ToLower();

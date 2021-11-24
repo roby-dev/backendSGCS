@@ -11,7 +11,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddTransient<UsuarioController>();
 builder.Services.Configure<JsonOptions>(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -53,18 +52,6 @@ app.MapGet("/", () => Results.LocalRedirect("~/swagger/index.html"));
 /// </Login>
 app.MapPost("/api/login", ([FromBody] AuthHelper body) => AuthController.login(body));
 
-/// < Model >
-/// Rutas para el CRUD del modelo Usuario
-/// </Model>
-app.MapGet("/api/usuarios", UsuarioController.getUsers);
-app.MapGet("/api/usuarios/{id:int}", (int id) => UsuarioController.getUserById(id));
-app.MapPost("/api/usuarios", (Usuario _usuario) => UsuarioController.createUser(_usuario));
-app.MapDelete("/api/usuarios/{id:int}", (int id) => UsuarioController.deleteUser(id));
-app.MapPut("/api/usuarios/{id:int}", ([FromRoute] int id,
-                                        [FromBody] Usuario _usuario) => UsuarioController.updateUser(id, _usuario));
-
-app.MapPut("/api/usuarios/cambiarClave/{id:int}", async ([FromRoute] int id,
-                                        [FromBody] Usuario _usuario) => await UsuarioController.changePassword(id, _usuario));
 
 /// <Model>
 /// Rutas para el CRUD del modelo MiembroProyecto
@@ -77,16 +64,6 @@ app.MapPost("/api/miembros", (MiembroProyecto _miembroProyecto) => MiembroProyec
 app.MapDelete("/api/miembros/{id:int}", (int id) => MiembroProyectoController.deleteMember(id));
 app.MapPut("/api/miembros/{id:int}", async ([FromRoute] int id,
                                         [FromBody] MiembroProyecto _miembroProyecto) => await MiembroProyectoController.updateMember(id, _miembroProyecto));
-
-///// <Model>
-///// Rutas para el CRUD del modelo Cargo
-///// </Model>
-//app.MapGet("/api/cargos", CargoController.getCargos);
-//app.MapGet("/api/cargos/{id:int}", (int id) => CargoController.getCargoById(id));
-//app.MapPost("/api/cargos", (Cargo _cargo) => CargoController.createCargo(_cargo));
-//app.MapDelete("/api/cargos/{id:int}", (int id) => CargoController.deleteCargo(id));
-//app.MapPut("/api/cargos/{id:int}", async ([FromRoute] int id,
-//                                        [FromBody] Cargo _cargo) => await CargoController.updateCargo(id, _cargo));
 
 /// <Model>
 /// Rutas para el CRUD del modelo ElementoConfiguracion
