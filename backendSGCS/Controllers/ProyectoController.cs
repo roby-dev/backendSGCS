@@ -51,7 +51,7 @@ namespace backendSGCS.Controllers {
                 context.Entry(project).CurrentValues.SetValues(_project);
                 await context.SaveChangesAsync();
                 return Results.Ok(project);
-            } catch (Exception e) {
+            } catch (Exception) {
                 return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar el proyecto"));
             }
         };

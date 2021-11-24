@@ -97,7 +97,7 @@ namespace backendSGCS.Controllers {
                 context.Entry(miembroProyecto).CurrentValues.SetValues(_miembro);
                 await context.SaveChangesAsync();
                 return Results.Ok(miembroProyecto);
-            } catch (Exception e) {
+            } catch (Exception) {
                 return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar el miembro del proyecto"));
             }
         };

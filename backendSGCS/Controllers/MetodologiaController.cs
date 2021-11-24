@@ -48,7 +48,7 @@ namespace backendSGCS.Controllers {
                 context.Entry(_metodologia).CurrentValues.SetValues(metodologia);
                 await context.SaveChangesAsync();
                 return Results.Ok(_metodologia);
-            } catch (Exception e) {
+            } catch (Exception) {
                 return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar la metodología"));
             }
         };

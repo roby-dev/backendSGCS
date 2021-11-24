@@ -62,7 +62,7 @@ namespace backendSGCS.Controllers {
                 context.Entry(lineaBase).CurrentValues.SetValues(_lineaBase);
                 await context.SaveChangesAsync();
                 return Results.Ok(lineaBase);
-            } catch (Exception e) {
+            } catch (Exception) {
                 return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar la linea base"));
             }
         };

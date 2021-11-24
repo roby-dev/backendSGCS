@@ -33,6 +33,7 @@ namespace backendSGCS.Controllers {
             if (id != cargo.IdCargo) {
                 return BadRequest(MessageHelper.createMessage(false, "Error al intentar actualizar cargo."));
             }
+            cargo.Nombre = cargo.Nombre.Trim();
             _context.Entry(cargo).State = EntityState.Modified;
             try {
                 await _context.SaveChangesAsync();

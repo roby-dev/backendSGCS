@@ -51,7 +51,7 @@ namespace backendSGCS.Controllers {
                 context.Entry(entregable).CurrentValues.SetValues(_entregable);
                 await context.SaveChangesAsync();
                 return Results.Ok(entregable);
-            } catch (Exception e) {
+            } catch (Exception) {
                 return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar el entregable"));
             }
         };

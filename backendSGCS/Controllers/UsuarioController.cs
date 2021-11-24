@@ -47,7 +47,7 @@ namespace backendSGCS.Controllers
                 context.Entry(_usuario).CurrentValues.SetValues(usuario);
                 context.SaveChanges();
                 return Results.Ok(_usuario);
-            } catch (Exception e) {
+            } catch (Exception) {
                 return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar al usuario"));
             }
         };
@@ -64,7 +64,7 @@ namespace backendSGCS.Controllers
                 context.Entry(_usuario).CurrentValues.SetValues(usuario);
                 await context.SaveChangesAsync();
                 return Results.Ok(_usuario);
-            } catch (Exception e) {
+            } catch (Exception) {
                 return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar cambiar la contraseña"));
             }
         };

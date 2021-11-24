@@ -111,7 +111,7 @@ namespace backendSGCS.Controllers {
                 context.Entry(elementoConfiguracion).CurrentValues.SetValues(_elementoConfiguracion);
                 await context.SaveChangesAsync();
                 return Results.Ok(elementoConfiguracion);
-            } catch (Exception e) {
+            } catch (Exception) {
                 return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar el elemento de configuración"));
             }
         };

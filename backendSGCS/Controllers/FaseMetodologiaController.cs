@@ -51,7 +51,7 @@ namespace backendSGCS.Controllers {
                 context.Entry(faseMetodologia).CurrentValues.SetValues(_faseMetodologia);
                 await context.SaveChangesAsync();
                 return Results.Ok(faseMetodologia);
-            } catch (Exception e) {
+            } catch (Exception) {
                 return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar al fase de metodología"));
             }
         };

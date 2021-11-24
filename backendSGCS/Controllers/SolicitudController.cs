@@ -69,7 +69,7 @@ namespace backendSGCS.Controllers {
                 context.Entry(solicitud).CurrentValues.SetValues(_solicitud);
                 await context.SaveChangesAsync();
                 return Results.Ok(solicitud);
-            } catch (Exception e) {
+            } catch (Exception) {
                 return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar la solicitud"));
             }
         };
