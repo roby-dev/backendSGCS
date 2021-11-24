@@ -4,13 +4,23 @@ using backendSGCS.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json.Serialization;
 
+const string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddTransient<UsuarioController>();
 builder.Services.Configure<JsonOptions>(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
+
+builder.Services.AddCors(options => {
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      builder => {
+                          builder.WithOrigins("*");
+                      });
 });
 
 builder.Services.AddSwaggerGen();
@@ -146,5 +156,6 @@ app.MapPut("/api/solicitudes/{id:int}", async ([FromRoute] int id,
 app.MapGet("/api/reportes/totales", ReportController.getAllTotal);
 
 app.MapGet("/oops", () => "Oops! An error happened.");
+app.MapControllers();
 
 app.Run();
