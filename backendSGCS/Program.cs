@@ -2,6 +2,7 @@ using backendSGCS.Controllers;
 using backendSGCS.Helpers;
 using backendSGCS.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
 const string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -26,7 +27,11 @@ builder.Services.AddCors(options => {
 });
 
 builder.Services.AddSwaggerGen();
-builder.Services.AddAuthorization(o => o.AddPolicy("AdminsOnly", b => b.RequireClaim("ADMIN", "true")));
+builder.Services.AddDbContext<dbSGCSContext>(
+    options => {
+        options.UseSqlServer(builder.Configuration.GetConnectionString("dbSGCS"));
+
+});
 
 var app = builder.Build();
 if (!app.Environment.IsDevelopment()) {
@@ -35,6 +40,8 @@ if (!app.Environment.IsDevelopment()) {
 app.UseCors(MyAllowSpecificOrigins);
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseHttpsRedirection();
+app.MapControllers();
 
 /// <Default>
 /// Ruta principal del backend
@@ -71,15 +78,15 @@ app.MapDelete("/api/miembros/{id:int}", (int id) => MiembroProyectoController.de
 app.MapPut("/api/miembros/{id:int}", async ([FromRoute] int id,
                                         [FromBody] MiembroProyecto _miembroProyecto) => await MiembroProyectoController.updateMember(id, _miembroProyecto));
 
-/// <Model>
-/// Rutas para el CRUD del modelo Cargo
-/// </Model>
-app.MapGet("/api/cargos", CargoController.getCargos);
-app.MapGet("/api/cargos/{id:int}", (int id) => CargoController.getCargoById(id));
-app.MapPost("/api/cargos", (Cargo _cargo) => CargoController.createCargo(_cargo));
-app.MapDelete("/api/cargos/{id:int}", (int id) => CargoController.deleteCargo(id));
-app.MapPut("/api/cargos/{id:int}", async ([FromRoute] int id,
-                                        [FromBody] Cargo _cargo) => await CargoController.updateCargo(id, _cargo));
+///// <Model>
+///// Rutas para el CRUD del modelo Cargo
+///// </Model>
+//app.MapGet("/api/cargos", CargoController.getCargos);
+//app.MapGet("/api/cargos/{id:int}", (int id) => CargoController.getCargoById(id));
+//app.MapPost("/api/cargos", (Cargo _cargo) => CargoController.createCargo(_cargo));
+//app.MapDelete("/api/cargos/{id:int}", (int id) => CargoController.deleteCargo(id));
+//app.MapPut("/api/cargos/{id:int}", async ([FromRoute] int id,
+//                                        [FromBody] Cargo _cargo) => await CargoController.updateCargo(id, _cargo));
 
 /// <Model>
 /// Rutas para el CRUD del modelo ElementoConfiguracion
@@ -159,6 +166,6 @@ app.MapPut("/api/solicitudes/{id:int}", async ([FromRoute] int id,
 app.MapGet("/api/reportes/totales", ReportController.getAllTotal);
 
 app.MapGet("/oops", () => "Oops! An error happened.");
-app.MapControllers();
+
 
 app.Run();

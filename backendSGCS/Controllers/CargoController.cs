@@ -1,61 +1,80 @@
 ﻿using backendSGCS.Helpers;
 using backendSGCS.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace backendSGCS.Controllers {
-    public class CargoController {
+    [Route("api/cargos")]
+    [ApiController]
+    public class CargoController : ControllerBase {
+        private readonly dbSGCSContext _context;
 
-        public static Func<Cargo, IResult> createCargo = (Cargo _cargo) => {
-            using dbSGCSContext context = new();
-            try {
-                _cargo.Nombre = _cargo.Nombre.Trim();
-                Cargo? cargo = context.Cargo.Where(x => x.Nombre == _cargo.Nombre).FirstOrDefault();
-                if (cargo == null) {
-                    _ = context.Cargo.Add(_cargo);
-                    _ = context.SaveChanges();
-                    return Results.Ok(_cargo);
-                }
-                return Results.NotFound(MessageHelper.createMessage(false, "Nombre de cargo ya registrado"));
-            } catch (Exception) {
-                return Results.NotFound(MessageHelper.createMessage(false, "Error al crear el cargo"));
+        public CargoController(dbSGCSContext context) {
+            _context = context;
+        }
+
+        // GET: api/cargos
+        [HttpGet("")]
+        public async Task<ActionResult<IEnumerable<Cargo>>> getCargos() {
+            return await _context.Cargo.ToListAsync();
+        }
+
+        // GET: api/cargos/5
+        [HttpGet("{id:int:required}")]
+        public async Task<ActionResult<Cargo>> getCargoById(int id) {
+            var cargo = await _context.Cargo.FindAsync(id);
+            return cargo is null ? NotFound(MessageHelper.createMessage(false, "Cargo no encontrado.")) : cargo;
+        }
+
+        // PUT: api/Cargo/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id:int:required}")]
+        public async Task<ActionResult<Cargo>> PutCargo(int id, Cargo cargo) {
+            if (id != cargo.IdCargo) {
+                return BadRequest(MessageHelper.createMessage(false, "Error al intentar actualizar cargo."));
             }
-        };
+            _context.Entry(cargo).State = EntityState.Modified;
+            try {
+                await _context.SaveChangesAsync();
+            } catch (DbUpdateConcurrencyException) {
+                if (!CargoExists(id)) {
+                    return NotFound(MessageHelper.createMessage(false, "No se encontró cargo."));
+                } else {
+                    return BadRequest(MessageHelper.createMessage(false, "Error al intentar actualizar cargo."));
+                }
+            }
+            return cargo;
+        }
 
-        public static Func<List<Cargo>> getCargos = () => {
-            dbSGCSContext context = new dbSGCSContext();
-            return context.Cargo.ToList();
-        };
+        // POST: api/Cargo
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Cargo>> PostCargo(Cargo cargo) {
+            cargo.Nombre = cargo.Nombre.Trim();
+            Cargo? isCargoExists = _context.Cargo.Where(x=>x.Nombre==cargo.Nombre).FirstOrDefault();
+            if (isCargoExists == null) {
+                _context.Cargo.Add(cargo);
+                await _context.SaveChangesAsync();
+                return cargo;
+            } 
+            return BadRequest(MessageHelper.createMessage(false, "Cargo ya registrado"));                       
+        }
 
-        public static Func<int, IResult> getCargoById = (int id) => {
-            dbSGCSContext context = new dbSGCSContext();
-            var cargo = context.Cargo.Find(id);
-            return cargo != null ? Results.Ok(cargo) : Results.NotFound(MessageHelper.createMessage(false, "No se encontró el cargo"));
-        };
-
-        public static Func<int, IResult> deleteCargo = (int id) => {
-            dbSGCSContext context = new dbSGCSContext();
-            var cargo = context.Cargo.Find(id);
+        // DELETE: api/Cargo/5
+        [HttpDelete("{id:int:required}")]
+        public async Task<IActionResult> DeleteCargo(int id) {
+            var cargo = await _context.Cargo.FindAsync(id);
             if (cargo == null) {
-                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el cargo"));
+                return NotFound(MessageHelper.createMessage(false,"No se encontró cargo"));
             }
-            context.Cargo.Remove(cargo);
-            context.SaveChanges();
-            return Results.Ok(MessageHelper.createMessage(true, "Cargo borrado exitosamente"));
-        };
 
-        public static Func<int, Cargo, Task<IResult>> updateCargo = async (int id, Cargo _cargo) => {         
-            try {
-                dbSGCSContext context = new dbSGCSContext();
-                var cargo = context.Cargo.Find(id);
-                if (cargo == null) {
-                    return Results.NotFound(MessageHelper.createMessage(false, "No se encontró el cargo"));
-                }
-                _cargo.Nombre = _cargo.Nombre.Trim();
-                context.Entry(cargo).CurrentValues.SetValues(_cargo);
-                await context.SaveChangesAsync();
-                return Results.Ok(_cargo);
-            } catch (Exception e) {
-                return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar el cargo"));
-            }
-        };
+            _context.Cargo.Remove(cargo);
+            await _context.SaveChangesAsync();
+            return Ok(MessageHelper.createMessage(true,"Cargo borrado correctamente"));
+        }
+
+        private bool CargoExists(int id) {
+            return _context.Cargo.Any(e => e.IdCargo == id);
+        }
     }
 }
