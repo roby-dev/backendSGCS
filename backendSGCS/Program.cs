@@ -90,20 +90,11 @@ app.MapPut("/api/entregables/{id:int}", async ([FromRoute] int id,
                                         [FromBody] Entregable _entregable) => await EntregableController.updateEntregable(id, _entregable));
 
 /// <Model>
-/// Rutas para el CRUD del modelo FaseMetodologia
-/// </Model>
-app.MapGet("/api/fasesMetodologia", FaseMetodologiaController.getFaseMetodologias);
-app.MapGet("/api/fasesMetodologia/{id:int}", (int id) => FaseMetodologiaController.getFaseMetodologiaById(id));
-app.MapPost("/api/fasesMetodologia", (FaseMetodologia _faseMetodologia) => FaseMetodologiaController.createFaseMetodologia(_faseMetodologia));
-app.MapDelete("/api/fasesMetodologia/{id:int}", (int id) => FaseMetodologiaController.deleteFaseMetodologia(id));
-app.MapPut("/api/fasesMetodologia/{id:int}", async ([FromRoute] int id,
-                                        [FromBody] FaseMetodologia _faseMetodologia) => await FaseMetodologiaController.updateFaseMetodologia(id, _faseMetodologia));
-
-/// <Model>
 /// Rutas para el CRUD del modelo LineaBase
 /// </Model>
 app.MapGet("/api/lineasBase", LineaBaseController.getLineaBases);
 app.MapGet("/api/lineasBase/{id:int}", (int id) => LineaBaseController.getLineaBaseById(id));
+app.MapGet("/api/lineasBase/proyectos/usuario/{id:int}", (int id) => LineaBaseController.getLineasBaseByProjectByUser(id));
 app.MapPost("/api/lineasBase", (LineaBase _lineaBase) => LineaBaseController.createLineaBase(_lineaBase));
 app.MapDelete("/api/lineasBase/{id:int}", (int id) => LineaBaseController.deleteLineaBase(id));
 app.MapPut("/api/lineasBase/{id:int}", async ([FromRoute] int id,
@@ -134,6 +125,7 @@ app.MapPut("/api/proyectos/{id:int}", async ([FromRoute] int id,
 /// </Model>
 app.MapGet("/api/solicitudes", SolicitudController.getSolicituds);
 app.MapGet("/api/solicitudes/{id:int}", (int id) => SolicitudController.getSolicitudById(id));
+app.MapGet("/api/solicitudes/usuario/{id:int}", (int id) => SolicitudController.getSolicitudByUser(id));
 app.MapPost("/api/solicitudes", (Solicitud _solicitud) => SolicitudController.createSolicitud(_solicitud));
 app.MapDelete("/api/solicitudes/{id:int}", (int id) => SolicitudController.deleteSolicitud(id));
 app.MapPut("/api/solicitudes/{id:int}", async ([FromRoute] int id,

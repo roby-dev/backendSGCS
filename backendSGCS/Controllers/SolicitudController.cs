@@ -42,6 +42,22 @@ namespace backendSGCS.Controllers {
             return Results.Ok(solicitud);
         };
 
+        public static Func<int, IResult> getSolicitudByUser = (int _id) => {
+            dbSGCSContext context = new dbSGCSContext();
+            var solicitudes = context.Solicitud
+                                    .Include(x => x.IdElementoConfiguracionNavigation.IdLineaBaseNavigation.IdProyectoNavigation.IdMetodologiaNavigation)
+                                    .Include(x => x.IdElementoConfiguracionNavigation.IdLineaBaseNavigation.IdEntregableNavigation.IdFaseMetodologiaNavigation.IdMetodologiaNavigation)
+                                    .Include(x => x.IdMiembroProyectoNavigation.IdCargoNavigation)
+                                    .Include(x => x.IdMiembroProyectoNavigation.IdProyectoNavigation)
+                                    .Include(x=>x.IdMiembroProyectoNavigation.IdUsuarioNavigation)                                                                        
+                                    .Where(x => x.IdMiembroProyectoNavigation.IdUsuario == _id)
+                                    .ToList();
+            if (solicitudes.Count == 0 ) {
+                return Results.NotFound(MessageHelper.createMessage(false, "No se encontraron solicituds para ese usuario"));
+            }
+            return Results.Ok(solicitudes);
+        };
+
         public static Func<int, IResult> deleteSolicitud = (int _id) => {
             dbSGCSContext context = new dbSGCSContext();
             var solicitud = context.Solicitud.Find(_id);

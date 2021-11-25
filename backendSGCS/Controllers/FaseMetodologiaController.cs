@@ -1,59 +1,83 @@
 ﻿using backendSGCS.Helpers;
 using backendSGCS.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace backendSGCS.Controllers {
-    public class FaseMetodologiaController {
+    [Route("api/fasesMetodologia")]
+    [ApiController]
+    public class FaseMetodologiaController : ControllerBase {
+        private readonly dbSGCSContext _context;
 
-        public static Func<FaseMetodologia, IResult> createFaseMetodologia = (FaseMetodologia _faseMetodologia) => {
-            try {
-                dbSGCSContext context = new dbSGCSContext();
-                context.FaseMetodologia.Add(_faseMetodologia);
-                context.SaveChanges();
-                return Results.Ok(_faseMetodologia);
-            } catch (Exception) {
-                return Results.NotFound(MessageHelper.createMessage(false, "Error al crear la fase de metdología"));
-            }            
-        };
+        public FaseMetodologiaController(dbSGCSContext context) {
+            _context = context;
+        }
 
-        public static Func<List<FaseMetodologia>> getFaseMetodologias = () => {
-            dbSGCSContext context = new dbSGCSContext();
-            return context.FaseMetodologia.Include("IdMetodologiaNavigation").ToList();
-        };
+        // GET: api/fasesMetodologia
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<FaseMetodologia>>> GetFaseMetodologia() {
+            return await _context.FaseMetodologia.Include(x => x.IdMetodologiaNavigation).ToListAsync();
+        }
 
-        public static Func<int, IResult> getFaseMetodologiaById = (int id) => {
-            dbSGCSContext context = new dbSGCSContext();
-            var faseMetodologia = context.FaseMetodologia.Include("IdMetodologiaNavigation").Where(x => x.IdFaseMetodologia == id).FirstOrDefault();
-            if(faseMetodologia is null) {
-                Results.NotFound(MessageHelper.createMessage(false, "No se encontró la fase de metdología"));
+        // GET: api/fasesMetodologia/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<FaseMetodologia>> GetFaseMetodologia(int id) {
+            var faseMetodologia = await  _context.FaseMetodologia.Include(x => x.IdMetodologiaNavigation).Where(x => x.IdFaseMetodologia == id).FirstOrDefaultAsync();
+            if (faseMetodologia is null) {
+                return NotFound(MessageHelper.createMessage(false, "No se encontró la fase de metdología"));
             }
-            return Results.Ok(faseMetodologia);
-        };
+            return faseMetodologia;
+        }
 
-        public static Func<int, IResult> deleteFaseMetodologia = (int id) => {
-            dbSGCSContext context = new dbSGCSContext();
-            var faseMetodologia = context.FaseMetodologia.Find(id);
-            if (faseMetodologia == null) {
-                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró la fase de metdología"));
+        // PUT: api/fasesMetodologia/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<ActionResult<FaseMetodologia>> PutFaseMetodologia(int id, FaseMetodologia faseMetodologia) {
+            if (id != faseMetodologia.IdFaseMetodologia) {
+                return BadRequest(MessageHelper.createMessage(false, "Error al intentar actualizar al fase de metodología"));
             }
-            context.FaseMetodologia.Remove(faseMetodologia);
-            context.SaveChanges();
-            return Results.Ok(MessageHelper.createMessage(true, "Fase de metodología borrada exitosamente"));
-        };
-
-        public static Func<int, FaseMetodologia, Task<IResult>> updateFaseMetodologia = async (int _id, FaseMetodologia _faseMetodologia) => {            
+            faseMetodologia.Nombre = faseMetodologia.Nombre.Trim();
+            _context.Entry(faseMetodologia).State = EntityState.Modified;
             try {
-                dbSGCSContext context = new dbSGCSContext();
-                var faseMetodologia = context.FaseMetodologia.Include("IdMetodologiaNavigation").Where(x => x.IdFaseMetodologia == _id).FirstOrDefault();
-                if (faseMetodologia == null) {
-                    return Results.NotFound(MessageHelper.createMessage(false, "No se encontró la fase de metodología"));
+                await _context.SaveChangesAsync();
+            } catch (DbUpdateConcurrencyException) {
+                if (!FaseMetodologiaExists(id)) {
+                    return NotFound(MessageHelper.createMessage(false, "No se encontró la fase de metodología"));
+                } else {
+                    return BadRequest(MessageHelper.createMessage(false, "Error al intentar actualizar al fase de metodología"));
                 }
-                context.Entry(faseMetodologia).CurrentValues.SetValues(_faseMetodologia);
-                await context.SaveChangesAsync();
-                return Results.Ok(faseMetodologia);
-            } catch (Exception) {
-                return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar al fase de metodología"));
             }
-        };
+            return faseMetodologia;
+        }
+
+        // POST: api/fasesMetodologia
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<FaseMetodologia>> PostFaseMetodologia(FaseMetodologia faseMetodologia) {
+            try {
+                faseMetodologia.Nombre = faseMetodologia.Nombre.Trim();
+                _context.FaseMetodologia.Add(faseMetodologia);
+                await _context.SaveChangesAsync();
+                return faseMetodologia;
+            } catch (Exception) {
+                return BadRequest(MessageHelper.createMessage(false, "Error al intentar actualizar al fase de metodología"));
+            }
+        }
+
+        // DELETE: api/fasesMetodologia/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteFaseMetodologia(int id) {
+            var faseMetodologia = await _context.FaseMetodologia.FindAsync(id);
+            if (faseMetodologia is null) {
+                return NotFound(MessageHelper.createMessage(false, "No se encontró la fase de metodología"));
+            }
+            _context.FaseMetodologia.Remove(faseMetodologia);
+            await _context.SaveChangesAsync();
+            return Ok(MessageHelper.createMessage(true, "Fase de metodología borrada correctamente"));
+        }
+
+        private bool FaseMetodologiaExists(int id) {
+            return _context.FaseMetodologia.Any(e => e.IdFaseMetodologia == id);
+        }
     }
 }

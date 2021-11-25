@@ -66,5 +66,38 @@ namespace backendSGCS.Controllers {
                 return Results.NotFound(MessageHelper.createMessage(false, "Error al intentar actualizar la linea base"));
             }
         };
+
+        public static Func<int, Task<IResult>> getLineasBaseByProjectByUser = async (int _id) => {
+            try {
+                dbSGCSContext context = new dbSGCSContext();
+                var miembroProyectos = context.MiembroProyecto.Include("IdCargoNavigation")
+                                                     .Include("IdProyectoNavigation.IdMetodologiaNavigation")
+                                                     .Include("IdUsuarioNavigation")
+                                                     .Where(x => x.IdUsuario == _id)
+                                                     .ToList();
+                if (miembroProyectos is null) {
+                    return Results.NotFound(MessageHelper.createMessage(false, "No se encontraron proyectos"));
+                }
+                List<LineaBase> lineasBase = new List<LineaBase>();
+                miembroProyectos.ForEach(miembro => {
+                    var lineaBase = context.LineaBase.Include(x => x.IdEntregableNavigation.IdFaseMetodologiaNavigation)
+                                                     .Include(x => x.IdProyectoNavigation.IdMetodologiaNavigation)
+                                                     .Where(x => x.IdProyecto == miembro.IdProyecto)
+                                                     .ToList();
+                    if (lineaBase != null) {
+                        lineaBase.ForEach(x => {
+                            lineasBase.Add(x);
+                        });
+                    }
+                });
+                if (lineasBase.Count == 0) {
+                    return Results.NotFound(MessageHelper.createMessage(false, "No se encontraron lineas base para los proyectos de este usuario"));
+                }
+                return Results.Ok(lineasBase);
+            } catch (Exception) {
+
+                return Results.BadRequest(MessageHelper.createMessage(false, "Error al iniciar la consulta"));
+            }
+        };
     }
 }
