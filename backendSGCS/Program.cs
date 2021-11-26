@@ -84,7 +84,7 @@ app.MapPut("/api/elementosConfiguracion/{id:int}", async ([FromRoute] int id,
 /// </Model>
 app.MapGet("/api/entregables", EntregableController.getEntregables);
 app.MapGet("/api/entregables/{id:int}", (int id) => EntregableController.getEntregableById(id));
-app.MapGet("/api/entregables/proyect/{id:int}", (int id) => EntregableController.getEntregablesByProject(id));
+app.MapGet("/api/entregables/proyecto/{id:int}", (int id) => EntregableController.getEntregablesByProject(id));
 app.MapPost("/api/entregables", (Entregable _entregable) => EntregableController.createEntregable(_entregable));
 app.MapDelete("/api/entregables/{id:int}", (int id) => EntregableController.deleteEntregable(id));
 app.MapPut("/api/entregables/{id:int}", async ([FromRoute] int id,
