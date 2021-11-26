@@ -55,8 +55,8 @@ namespace backendSGCS.Controllers {
                                                         .Include("IdCargoNavigation")
                                                         .Include("IdProyectoNavigation.IdMetodologiaNavigation")
                                                         .Include("IdUsuarioNavigation")
-                                                        .FirstOrDefault();
-                if(miembroProyecto is null) {
+                                                        .ToList();
+                if(miembroProyecto.Count==0) {
                     return Results.NotFound(MessageHelper.createMessage(false, "No se encontro miembros para ese proyecto"));
                 }
                 return Results.Ok(miembroProyecto);
