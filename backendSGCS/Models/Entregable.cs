@@ -19,7 +19,7 @@ namespace backendSGCS.Models
         public bool? Estado { get; set; }
 
         [JsonPropertyName("faseMetodologia")]
-        public virtual FaseMetodologia IdFaseMetodologiaNavigation { get; set; } = null!;
+        public virtual FaseMetodologia? IdFaseMetodologiaNavigation { get; set; } = null!;
         [JsonIgnore]
         public virtual ICollection<LineaBase> LineaBase { get; set; }
     }

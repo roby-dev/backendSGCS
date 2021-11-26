@@ -21,7 +21,7 @@ namespace backendSGCS.Models
         public string? Repositorio { get; set; }
         public string FechaFin { get; set; } = null!;
         [JsonPropertyName("metodologia")]
-        public virtual Metodologia IdMetodologiaNavigation { get; set; } = null!;
+        public virtual Metodologia? IdMetodologiaNavigation { get; set; } = null!;
         [JsonIgnore]
         public virtual ICollection<LineaBase> LineaBase { get; set; }
         [JsonIgnore]

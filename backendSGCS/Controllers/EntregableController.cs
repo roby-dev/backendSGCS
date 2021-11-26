@@ -21,6 +21,20 @@ namespace backendSGCS.Controllers {
             return context.Entregable.Include("IdFaseMetodologiaNavigation.IdMetodologiaNavigation").ToList();
         };
 
+        public static Func<int,IResult> getEntregablesByProject = (int _id) => {
+            dbSGCSContext context = new dbSGCSContext();
+            Proyecto? proyecto = context.Proyecto.Include(x => x.IdMetodologiaNavigation).Where(x => x.IdProyecto == _id).FirstOrDefault();
+            if(proyecto is null) {
+                return Results.NotFound(MessageHelper.createMessage(false, "No se encontró proyecto"));
+            }
+
+            List<Entregable>? entregables = context.Entregable.Include(x=>x.IdFaseMetodologiaNavigation.IdMetodologiaNavigation).Where(x => x.IdFaseMetodologiaNavigation.IdMetodologia== proyecto.IdMetodologia).ToList();
+            if (entregables.Count==0) {
+                Results.NotFound(MessageHelper.createMessage(false, "No se encontró entregables para ese proyecto"));
+            }
+            return Results.Ok(entregables);
+        };
+
         public static Func<int, IResult> getEntregableById = (int id) => {
             dbSGCSContext context = new dbSGCSContext();
             Entregable? entregable = context.Entregable.Include("IdFaseMetodologiaNavigation.IdMetodologiaNavigation").Where(x => x.IdEntregable == id).FirstOrDefault();

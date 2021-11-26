@@ -12,6 +12,6 @@ namespace backendSGCS.Models
         public string Version { get; set; } = null!;
         public int IdVersion { get; set; }
         [JsonPropertyName("solicitud")]
-        public virtual Solicitud IdSolicitudNavigation { get; set; } = null!;
+        public virtual Solicitud? IdSolicitudNavigation { get; set; } = null!;
     }
 }

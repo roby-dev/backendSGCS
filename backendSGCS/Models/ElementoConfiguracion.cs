@@ -16,7 +16,7 @@ namespace backendSGCS.Models
         public string Nombre { get; set; } = null!;
         public string Descripcion { get; set; } = null!;
         [JsonPropertyName("lineaBase")]
-        public virtual LineaBase IdLineaBaseNavigation { get; set; } = null!;
+        public virtual LineaBase? IdLineaBaseNavigation { get; set; } = null!;
         [JsonIgnore]
         public virtual ICollection<Solicitud> Solicitud { get; set; }
     }

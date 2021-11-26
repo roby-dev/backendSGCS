@@ -21,9 +21,9 @@ namespace backendSGCS.Models
         public string? Archivo { get; set; }
         public string? Respuesta { get; set; }
         [JsonPropertyName("elementoConfiguracion")]
-        public virtual ElementoConfiguracion IdElementoConfiguracionNavigation { get; set; } = null!;
+        public virtual ElementoConfiguracion? IdElementoConfiguracionNavigation { get; set; } = null!;
         [JsonPropertyName("miembroProyecto")]
-        public virtual MiembroProyecto IdMiembroProyectoNavigation { get; set; } = null!;
+        public virtual MiembroProyecto? IdMiembroProyectoNavigation { get; set; } = null!;
         [JsonIgnore]
         public virtual ICollection<VersionElementoConfiguracion> VersionElementoConfiguracion { get; set; }
     }

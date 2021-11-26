@@ -17,9 +17,9 @@ namespace backendSGCS.Models
         public string FechaInicio { get; set; } = null!;
         public string FechaFin { get; set; } = null!;
         [JsonPropertyName("entregable")]
-        public virtual Entregable IdEntregableNavigation { get; set; } = null!;
+        public virtual Entregable? IdEntregableNavigation { get; set; } = null!;
         [JsonPropertyName("proyecto")]
-        public virtual Proyecto IdProyectoNavigation { get; set; } = null!;
+        public virtual Proyecto? IdProyectoNavigation { get; set; } = null!;
         [JsonIgnore]
         public virtual ICollection<ElementoConfiguracion> ElementoConfiguracion { get; set; }
     }
