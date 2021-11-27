@@ -22,7 +22,7 @@ namespace backendSGCS.Controllers {
             } else {
                 Result.cantidadCargo = context.Cargo.ToList().Count;
                 Result.cantidadElementoConfiguracion = getElementsByProjectByUser(_usuario.IdUsuario).Count;
-                Result.cantidadEntregable = getEntregablesByUser(_usuario.IdUsuario).Count;
+                Result.cantidadEntregable = getEntregablesByUser(_usuario.IdUsuario).Where(x=>x.Estado==true).ToList().Count;
                 Result.cantidadFaseMetodologia = 0;
                 Result.cantidadLineaBase = getLineasBaseByProjectByUser(_usuario.IdUsuario).Count;
                 Result.cantidadMetodologia = 0;
@@ -133,7 +133,7 @@ namespace backendSGCS.Controllers {
         private static Func<int, List<MiembroProyecto>> getMembersByUser = (int _id) => {
             List<MiembroProyecto> miembros = new List<MiembroProyecto>();
             dbSGCSContext context = new dbSGCSContext();
-            var proyectos = context.MiembroProyecto.Where(x => x.IdUsuario == _id).ToList();
+            var proyectos = context.MiembroProyecto.Include(x=>x.IdUsuarioNavigation).Where(x => x.IdUsuario == _id).Where(x=>x.IdUsuarioNavigation.Estado==true).ToList();
             proyectos.ForEach(proyecto => {
                 var miembro = context.MiembroProyecto.Where(x => x.IdProyecto == proyecto.IdProyecto).ToList();
                 miembro.ForEach(x => {
