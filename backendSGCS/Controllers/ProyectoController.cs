@@ -28,7 +28,7 @@ namespace backendSGCS.Controllers {
             } catch (Exception) {
                 return Results.NotFound(MessageHelper.createMessage(false, "Error al crear el proyecto"));
             }
-        };
+        };        
 
         public static Func<int, IResult> deleteProject = (int id) => {
             dbSGCSContext context = new dbSGCSContext();

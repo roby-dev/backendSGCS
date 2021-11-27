@@ -135,7 +135,7 @@ app.MapPut("/api/solicitudes/{id:int}", async ([FromRoute] int id,
 /// <Model>
 /// Rutas para los reportes
 /// </Model>
-app.MapGet("/api/reportes/totales", ReportController.getAllTotal);
+app.MapPost("/api/reportes/totales", ([FromBody] Usuario usuario) => ReportController.getAllTotal(usuario));
 
 app.MapGet("/oops", () => "Oops! An error happened.");
 
