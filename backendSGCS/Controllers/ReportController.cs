@@ -198,7 +198,7 @@ namespace backendSGCS.Controllers {
                     var tmpLineasBase = lineasBase.Where(x => x.IdProyecto == proyecto.IdProyecto).Where(x => x.IdEntregableNavigation.IdFaseMetodologia == fase.IdFaseMetodologia).ToList();
                     tmpLineasBase.ForEach(linea => {
                         objetoHighchart += $"{{" +
-                        $"name: '{linea.IdEntregableNavigation.Nomenclatura}'," +
+                        $"name: '{linea.IdEntregableNavigation.Nomenclatura} - {linea.IdEntregableNavigation.Nombre}'," +
                         $"id: '{linea.IdLineaBase}'," +
                         $"parent: '{fase.IdFaseMetodologia}'," +
                         $"start: {convertTime(DateTime.Parse(linea.FechaInicio))}," +
