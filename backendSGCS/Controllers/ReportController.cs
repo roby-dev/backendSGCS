@@ -152,70 +152,75 @@ namespace backendSGCS.Controllers {
         };
 
         public static Func<int, IResult> getGanttDiagram = (int _id) => {
-            dbSGCSContext context = new dbSGCSContext();
-            Proyecto? proyecto = context.Proyecto.Include(x => x.IdMetodologiaNavigation).Where(x => x.IdProyecto == _id).FirstOrDefault();
-            if (proyecto is null) return Results.NotFound(MessageHelper.createMessage(false, "No se encontró proyecto"));
-            List<FaseMetodologia> fases = context.FaseMetodologia.Where(x => x.IdMetodologia == proyecto.IdMetodologia).Where(x=>x.Estado==true).ToList();
-            List<LineaBase> lineasBase = context.LineaBase.Include(x=>x.IdProyectoNavigation).Include(x=>x.IdEntregableNavigation).Where(x => x.IdProyecto == proyecto.IdProyecto).ToList();
+            try {
+                dbSGCSContext context = new dbSGCSContext();
+                Proyecto? proyecto = context.Proyecto.Include(x => x.IdMetodologiaNavigation).Where(x => x.IdProyecto == _id).FirstOrDefault();
+                if (proyecto is null) return Results.NotFound(MessageHelper.createMessage(false, "No se encontró proyecto"));
+                List<FaseMetodologia> fases = context.FaseMetodologia.Where(x => x.IdMetodologia == proyecto.IdMetodologia).Where(x => x.Estado == true).ToList();
+                List<LineaBase> lineasBase = context.LineaBase.Include(x => x.IdProyectoNavigation).Include(x => x.IdEntregableNavigation).Where(x => x.IdProyecto == proyecto.IdProyecto).ToList();
 
-            lineasBase = lineasBase.OrderBy(x => DateTime.Parse(x.FechaInicio)).ToList();
+                lineasBase = lineasBase.OrderBy(x => DateTime.Parse(x.FechaInicio)).ToList();
 
-            var inicioProyecto = convertTime(DateTime.Parse(proyecto.FechaInicio));
-            var finProyecto = convertTime(DateTime.Parse(proyecto.FechaFin));
+                var inicioProyecto = convertTime(DateTime.Parse(proyecto.FechaInicio));
+                var finProyecto = convertTime(DateTime.Parse(proyecto.FechaFin));
 
-            string objetoHighchart = "";
-            objetoHighchart += $"" +
-                $"title: {{" +
-                $"  text:'Diagrama de Gantt - {proyecto.Nombre}'" +
-                $"}}," +
-                $"xAxis: {{" +
-                $"  min: {inicioProyecto} - (2 * day)," +
-                $"  max: {finProyecto} + (2 * day)" +
-                $"}}," +
-                $"series: [{{" +
-                $"  name: '{proyecto.Nombre}'," +
-                $"  data: [{{" +
-                $"      name: '{proyecto.Nombre}'," +
-                $"      id: 'proyecto'," +
-                $"      start: {inicioProyecto}," +
-                $"      end: {finProyecto}" +
-                $"  }},";
+                string objetoHighchart = "";
+                objetoHighchart += $"" +
+                    $"title: {{" +
+                    $"  text:'Diagrama de Gantt - {proyecto.Nombre}'" +
+                    $"}}," +
+                    $"xAxis: {{" +
+                    $"  min: {inicioProyecto} - (2 * day)," +
+                    $"  max: {finProyecto} + (2 * day)" +
+                    $"}}," +
+                    $"series: [{{" +
+                    $"  name: '{proyecto.Nombre}'," +
+                    $"  data: [{{" +
+                    $"      name: '{proyecto.Nombre}'," +
+                    $"      id: 'proyecto'," +
+                    $"      start: {inicioProyecto}," +
+                    $"      end: {finProyecto}" +
+                    $"  }},";
 
-            fases.ForEach(fase => {
-                objetoHighchart += $"{{" +
-                $"      name: '{fase.Nombre}'," +
-                $"      id: '{fase.IdFaseMetodologia}'," +
-                $"      parent: 'proyecto',";
-                bool isExistsLineaBase = lineasBase.Where(x => x.IdProyecto==proyecto.IdProyecto).Where(x=>x.IdEntregableNavigation.IdFaseMetodologia==fase.IdFaseMetodologia).Any();
-                if (isExistsLineaBase) {
-                    var lineaBasePrimera = lineasBase.Where(x => x.IdProyecto==proyecto.IdProyecto).Where(x=>x.IdEntregableNavigation.IdFaseMetodologia== fase.IdFaseMetodologia).FirstOrDefault();
-                    var lineaBaseFinal = lineasBase.Where(x => x.IdProyecto == proyecto.IdProyecto).Where(x => x.IdEntregableNavigation.IdFaseMetodologia == fase.IdFaseMetodologia).Reverse().FirstOrDefault();
-                    objetoHighchart += $"" +
-                    $"  start: {convertTime(DateTime.Parse(lineaBasePrimera.FechaInicio))}," +
-                    $"  end: {convertTime(DateTime.Parse(lineaBaseFinal.FechaFin))}" +
-                    $"}},";
-                    var tmpLineasBase = lineasBase.Where(x => x.IdProyecto == proyecto.IdProyecto).Where(x => x.IdEntregableNavigation.IdFaseMetodologia == fase.IdFaseMetodologia).ToList();
-                    tmpLineasBase.ForEach(linea => {
-                        objetoHighchart += $"{{" +
-                        $"name: '{linea.IdEntregableNavigation.Nomenclatura} - {linea.IdEntregableNavigation.Nombre}'," +
-                        $"id: '{linea.IdLineaBase}'," +
-                        $"parent: '{fase.IdFaseMetodologia}'," +
-                        $"start: {convertTime(DateTime.Parse(linea.FechaInicio))}," +
-                        $"end: {convertTime(DateTime.Parse(linea.FechaFin))}" +
+                fases.ForEach(fase => {
+                    objetoHighchart += $"{{" +
+                    $"      name: '{fase.Nombre}'," +
+                    $"      id: '{fase.IdFaseMetodologia}'," +
+                    $"      parent: 'proyecto',";
+                    bool isExistsLineaBase = lineasBase.Where(x => x.IdProyecto == proyecto.IdProyecto).Where(x => x.IdEntregableNavigation.IdFaseMetodologia == fase.IdFaseMetodologia).Any();
+                    if (isExistsLineaBase) {
+                        var lineaBasePrimera = lineasBase.Where(x => x.IdProyecto == proyecto.IdProyecto).Where(x => x.IdEntregableNavigation.IdFaseMetodologia == fase.IdFaseMetodologia).FirstOrDefault();
+                        var lineaBaseFinal = lineasBase.Where(x => x.IdProyecto == proyecto.IdProyecto).Where(x => x.IdEntregableNavigation.IdFaseMetodologia == fase.IdFaseMetodologia).Reverse().FirstOrDefault();
+                        objetoHighchart += $"" +
+                        $"  start: {convertTime(DateTime.Parse(lineaBasePrimera.FechaInicio))}," +
+                        $"  end: {convertTime(DateTime.Parse(lineaBaseFinal.FechaFin))}" +
                         $"}},";
-                    });
-                } else {
-                    objetoHighchart += $"" +
-                    $"  start: ' '," +
-                    $"  end: ' '" +
-                    $"}},";
-                }
-            });
+                        var tmpLineasBase = lineasBase.Where(x => x.IdProyecto == proyecto.IdProyecto).Where(x => x.IdEntregableNavigation.IdFaseMetodologia == fase.IdFaseMetodologia).ToList();
+                        tmpLineasBase.ForEach(linea => {
+                            objetoHighchart += $"{{" +
+                            $"name: '{linea.IdEntregableNavigation.Nomenclatura} - {linea.IdEntregableNavigation.Nombre}'," +
+                            $"id: '{linea.IdLineaBase}'," +
+                            $"parent: '{fase.IdFaseMetodologia}'," +
+                            $"start: {convertTime(DateTime.Parse(linea.FechaInicio))}," +
+                            $"end: {convertTime(DateTime.Parse(linea.FechaFin))}" +
+                            $"}},";
+                        });
+                    } else {
+                        objetoHighchart += $"" +
+                        $"  start: ' '," +
+                        $"  end: ' '" +
+                        $"}},";
+                    }
+                });
 
-            objetoHighchart += $"]" +
-            $"}}]";
+                objetoHighchart += $"]" +
+                $"}}]";
 
-            return Results.Ok(objetoHighchart);
+                return Results.Ok(objetoHighchart);
+            }
+            catch (Exception e) {
+                return Results.BadRequest(e);
+            }           
         };
 
         private static double convertTime(DateTime date) {
