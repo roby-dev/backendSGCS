@@ -134,6 +134,6 @@ app.MapPut("/api/solicitudes/{id:int}", async ([FromRoute] int id,
 /// Rutas para los reportes
 /// </Model>
 app.MapPost("/api/reportes/totales", ([FromBody] Usuario usuario) => ReportController.getAllTotal(usuario));
-app.MapGet("/api/reportes/diagrama/{id:int}", (int id) => ReportController.getGanttDiagram(id));
+app.MapGet("/api/reportes/diagrama/proyecto/{id:int}", (int id) => ReportController.getGanttDiagram(id));
 
 app.Run();
