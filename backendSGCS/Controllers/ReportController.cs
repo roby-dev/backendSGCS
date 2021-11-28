@@ -181,7 +181,6 @@ namespace backendSGCS.Controllers {
                 $"      end: {finProyecto}" +
                 $"  }},";
 
-
             fases.ForEach(fase => {
                 objetoHighchart += $"{{" +
                 $"      name: '{fase.Nombre}'," +

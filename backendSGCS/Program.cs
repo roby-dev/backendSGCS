@@ -33,9 +33,6 @@ builder.Services.AddDbContext<dbSGCSContext>(
 });
 
 var app = builder.Build();
-if (!app.Environment.IsDevelopment()) {
-    app.UseExceptionHandler("/oops");
-}
 app.UseCors(MyAllowSpecificOrigins);
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -138,8 +135,5 @@ app.MapPut("/api/solicitudes/{id:int}", async ([FromRoute] int id,
 /// </Model>
 app.MapPost("/api/reportes/totales", ([FromBody] Usuario usuario) => ReportController.getAllTotal(usuario));
 app.MapGet("/api/reportes/diagrama/{id:int}", (int id) => ReportController.getGanttDiagram(id));
-
-app.MapGet("/oops", () => "Oops! An error happened.");
-
 
 app.Run();
