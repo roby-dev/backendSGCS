@@ -100,5 +100,19 @@ namespace backendSGCS.Controllers {
                 return Results.BadRequest(MessageHelper.createMessage(false, "Error al iniciar la consulta"));
             }
         };
+
+        public static Func<int, IResult> getLineasBaseByProject = (int _id) => {
+            dbSGCSContext context = new dbSGCSContext();
+            List<LineaBase> lineasBase = context.LineaBase
+                                    .Include(x => x.IdEntregableNavigation.IdFaseMetodologiaNavigation.IdMetodologiaNavigation)
+                                    .Include(x => x.IdProyectoNavigation.IdMetodologiaNavigation)
+                                    .Where(x => x.IdProyecto == _id)
+                                    .ToList();
+            if (lineasBase.Count == 0) {
+                return Results.NotFound(MessageHelper.createMessage(false, "No se encontraron lineas base para ese proyecto"));
+            }
+
+            return Results.Ok(lineasBase);
+        };
     }
 }

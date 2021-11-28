@@ -96,6 +96,7 @@ app.MapPut("/api/entregables/{id:int}", async ([FromRoute] int id,
 app.MapGet("/api/lineasBase", LineaBaseController.getLineaBases);
 app.MapGet("/api/lineasBase/{id:int}", (int id) => LineaBaseController.getLineaBaseById(id));
 app.MapGet("/api/lineasBase/proyectos/usuario/{id:int}", (int id) => LineaBaseController.getLineasBaseByProjectByUser(id));
+app.MapGet("/api/lineasBase/proyecto/{id:int}", (int id) => LineaBaseController.getLineasBaseByProject(id));
 app.MapPost("/api/lineasBase", (LineaBase _lineaBase) => LineaBaseController.createLineaBase(_lineaBase));
 app.MapDelete("/api/lineasBase/{id:int}", (int id) => LineaBaseController.deleteLineaBase(id));
 app.MapPut("/api/lineasBase/{id:int}", async ([FromRoute] int id,
