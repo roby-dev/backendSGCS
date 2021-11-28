@@ -20,17 +20,24 @@ namespace backendSGCS.Controllers {
                 Result.cantidadUsuario = context.Usuario.ToList().Count;
                 Result.cantidadVersiones = context.VersionElementoConfiguracion.ToList().Count;
             } else {
-                Result.cantidadCargo = context.Cargo.ToList().Count;
-                Result.cantidadElementoConfiguracion = getElementsByProjectByUser(_usuario.IdUsuario).Count;
-                Result.cantidadEntregable = getEntregablesByUser(_usuario.IdUsuario).Where(x=>x.Estado==true).ToList().Count;
-                Result.cantidadFaseMetodologia = 0;
-                Result.cantidadLineaBase = getLineasBaseByProjectByUser(_usuario.IdUsuario).Count;
-                Result.cantidadMetodologia = 0;
-                Result.cantidadMiembroProyecto = getMembersByUser(_usuario.IdUsuario).Count;
-                Result.cantidadProyecto = getProyectsByUser(_usuario.IdUsuario).Count;
-                Result.cantidadSolicitud = context.Solicitud.ToList().Count;
                 Result.cantidadUsuario = 0;
+                Result.cantidadMetodologia = 0;                
+                Result.cantidadCargo = context.Cargo.ToList().Count;                
+                Result.cantidadProyecto = getProyectsByUser(_usuario.IdUsuario).Count;
+                Result.cantidadFaseMetodologia = 0;
+                Result.cantidadEntregable = getEntregablesByUser(_usuario.IdUsuario).Where(x=>x.Estado==true).ToList().Count;                
+                Result.cantidadElementoConfiguracion = getElementsByProjectByUser(_usuario.IdUsuario).Count;
                 Result.cantidadVersiones = context.VersionElementoConfiguracion.ToList().Count;
+                Result.cantidadLineaBase = getLineasBaseByProjectByUser(_usuario.IdUsuario).Count;
+                Result.cantidadSolicitud = context.Solicitud.ToList().Count;
+                Result.cantidadMiembroProyecto = getMembersByUser(_usuario.IdUsuario).Count;
+                if (_usuario.Rol == "USER") {
+                    Result.cantidadCargo = 0;
+                    Result.cantidadEntregable = 0;
+                    Result.cantidadElementoConfiguracion = 0;
+                    Result.cantidadVersiones = 0;
+                    Result.cantidadMiembroProyecto = 0;
+                }
             }
             return Results.Ok(Result);
         };
