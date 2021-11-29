@@ -28,7 +28,7 @@ namespace backendSGCS.Controllers {
                 Result.cantidadFaseMetodologia = 0;
                 Result.cantidadEntregable = getEntregablesByUser(_usuario.IdUsuario).Where(x=>x.Estado==true).ToList().Count;                
                 Result.cantidadElementoConfiguracion = getElementsByProjectByUser(_usuario.IdUsuario).Count;
-                Result.cantidadVersiones = context.VersionElementoConfiguracion.ToList().Count;
+                Result.cantidadVersiones = getVersionsByUser(_usuario.IdUsuario).Count;
                 Result.cantidadLineaBase = getLineasBaseByProjectByUser(_usuario.IdUsuario).Count;
                 Result.cantidadSolicitud = getSolicitudByProjectsByUser(_usuario.IdUsuario).Count;
                 Result.cantidadMiembroProyecto = getMembersByUser(_usuario.IdUsuario).Count;
@@ -41,6 +41,36 @@ namespace backendSGCS.Controllers {
                 }
             }
             return Results.Ok(Result);
+        };
+
+        private static Func<int, List<VersionElementoConfiguracion>> getVersionsByUser = (int _id) => {
+            List<VersionElementoConfiguracion> versionesByProject = new List<VersionElementoConfiguracion>();
+            dbSGCSContext _context = new dbSGCSContext();
+            var miembroProyecto = _context.MiembroProyecto
+                                                .Include(x => x.IdProyectoNavigation)
+                                                .Include(x => x.IdCargoNavigation)
+                                                .Where(x => x.IdUsuario == _id)
+                                                .ToList();
+            
+
+            miembroProyecto.ForEach(miembro => {
+                var versiones = _context.VersionElementoConfiguracion
+                                               .Include(x => x.IdSolicitudNavigation.IdElementoConfiguracionNavigation.IdLineaBaseNavigation.IdProyectoNavigation.IdMetodologiaNavigation)
+                                               .Include(x => x.IdSolicitudNavigation.IdElementoConfiguracionNavigation.IdLineaBaseNavigation.IdEntregableNavigation.IdFaseMetodologiaNavigation.IdMetodologiaNavigation)
+                                               .Include(x => x.IdSolicitudNavigation.IdMiembroProyectoNavigation.IdUsuarioNavigation)
+                                               .Include(x => x.IdSolicitudNavigation.IdMiembroProyectoNavigation.IdProyectoNavigation)
+                                               .Include(x => x.IdSolicitudNavigation.IdMiembroProyectoNavigation.IdCargoNavigation)
+                                               .Where(x => x.IdSolicitudNavigation.IdMiembroProyectoNavigation.IdProyecto == miembro.IdProyecto)
+                                               .ToList();
+                if (versiones.Count != 0) {
+                    versiones.ForEach(version => {
+                        versionesByProject.Add(version);
+                    });
+                }
+            });
+
+            versionesByProject = versionesByProject.Distinct().ToList();  
+            return versionesByProject;
         };
 
         private static Func<int, List<Proyecto>> getProyectsByUser = (int _id) => {
