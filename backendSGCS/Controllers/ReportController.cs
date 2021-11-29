@@ -19,7 +19,7 @@ namespace backendSGCS.Controllers {
                 Result.cantidadProyecto = context.Proyecto.ToList().Count;
                 Result.cantidadSolicitud = context.Solicitud.ToList().Count;
                 Result.cantidadUsuario = context.Usuario.ToList().Count;
-                Result.cantidadVersiones = context.VersionElementoConfiguracion.ToList().Count;
+                Result.cantidadVersionElementoConfiguracion = context.VersionElementoConfiguracion.ToList().Count;
             } else {
                 Result.cantidadUsuario = 0;
                 Result.cantidadMetodologia = 0;                
@@ -28,7 +28,7 @@ namespace backendSGCS.Controllers {
                 Result.cantidadFaseMetodologia = 0;
                 Result.cantidadEntregable = getEntregablesByUser(_usuario.IdUsuario).Where(x=>x.Estado==true).ToList().Count;                
                 Result.cantidadElementoConfiguracion = getElementsByProjectByUser(_usuario.IdUsuario).Count;
-                Result.cantidadVersiones = getVersionsByUser(_usuario.IdUsuario).Count;
+                Result.cantidadVersionElementoConfiguracion = getVersionsByUser(_usuario.IdUsuario).Count;
                 Result.cantidadLineaBase = getLineasBaseByProjectByUser(_usuario.IdUsuario).Count;
                 Result.cantidadSolicitud = getSolicitudByProjectsByUser(_usuario.IdUsuario).Count;
                 Result.cantidadMiembroProyecto = getMembersByUser(_usuario.IdUsuario).Count;
