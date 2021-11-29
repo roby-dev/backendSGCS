@@ -154,7 +154,7 @@ namespace backendSGCS.Controllers
             _context.VersionElementoConfiguracion.Add(versionElementoConfiguracion);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetVersionElementoConfiguracion", new { id = versionElementoConfiguracion.IdVersion }, versionElementoConfiguracion);
+            return Ok(versionElementoConfiguracion);
         }
 
         // DELETE: api/VersionElementoConfiguracion/5
@@ -170,7 +170,7 @@ namespace backendSGCS.Controllers
             _context.VersionElementoConfiguracion.Remove(versionElementoConfiguracion);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(MessageHelper.createMessage(true, "Version elimnada correctamente"));
         }
 
         private bool VersionElementoConfiguracionExists(int id)
