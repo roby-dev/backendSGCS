@@ -32,7 +32,7 @@ namespace backendSGCS.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Data Source=tcp:200.106.124.168,1433;Initial Catalog=dbSGCS;Persist Security Info=True;User ID=roby;Password=Sistemas.123");
+                optionsBuilder.UseSqlServer("Data Source=tcp:190.43.92.38,1433;Initial Catalog=dbSGCS;Persist Security Info=True;User ID=roby;Password=Sistemas.123");
             }
         }
 

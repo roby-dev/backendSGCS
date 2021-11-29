@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ROBY\\source\\repos\\Nueva carpeta (2)\\backendSGCS\\backendSGCS\\backendSGCS.csproj": {}
+    "E:\\Universidad\\UPT_2021-II\\GESTION CONF\\Frontend\\backendSGCS\\backendSGCS\\backendSGCS.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ROBY\\source\\repos\\Nueva carpeta (2)\\backendSGCS\\backendSGCS\\backendSGCS.csproj": {
+    "E:\\Universidad\\UPT_2021-II\\GESTION CONF\\Frontend\\backendSGCS\\backendSGCS\\backendSGCS.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ROBY\\source\\repos\\Nueva carpeta (2)\\backendSGCS\\backendSGCS\\backendSGCS.csproj",
+        "projectUniqueName": "E:\\Universidad\\UPT_2021-II\\GESTION CONF\\Frontend\\backendSGCS\\backendSGCS\\backendSGCS.csproj",
         "projectName": "backendSGCS",
-        "projectPath": "C:\\Users\\ROBY\\source\\repos\\Nueva carpeta (2)\\backendSGCS\\backendSGCS\\backendSGCS.csproj",
+        "projectPath": "E:\\Universidad\\UPT_2021-II\\GESTION CONF\\Frontend\\backendSGCS\\backendSGCS\\backendSGCS.csproj",
         "packagesPath": "C:\\Users\\ROBY\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ROBY\\source\\repos\\Nueva carpeta (2)\\backendSGCS\\backendSGCS\\obj\\",
+        "outputPath": "E:\\Universidad\\UPT_2021-II\\GESTION CONF\\Frontend\\backendSGCS\\backendSGCS\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
