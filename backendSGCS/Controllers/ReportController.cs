@@ -30,7 +30,7 @@ namespace backendSGCS.Controllers {
                 Result.cantidadElementoConfiguracion = getElementsByProjectByUser(_usuario.IdUsuario).Count;
                 Result.cantidadVersiones = context.VersionElementoConfiguracion.ToList().Count;
                 Result.cantidadLineaBase = getLineasBaseByProjectByUser(_usuario.IdUsuario).Count;
-                Result.cantidadSolicitud = context.Solicitud.ToList().Count;
+                Result.cantidadSolicitud = getSolicitudByProjectsByUser(_usuario.IdUsuario).Count;
                 Result.cantidadMiembroProyecto = getMembersByUser(_usuario.IdUsuario).Count;
                 if (_usuario.Rol == "USER") {
                     Result.cantidadCargo = 0;
@@ -86,6 +86,32 @@ namespace backendSGCS.Controllers {
                 }
             });
             return elementoConfiguracions;
+        };
+
+        private static Func<int, List<Solicitud>> getSolicitudByProjectsByUser = (int _id) => {
+            dbSGCSContext context = new dbSGCSContext();
+
+            var miembroProyecto = context.MiembroProyecto.Include(X => X.IdProyectoNavigation).Include(X => X.IdUsuarioNavigation).Where(x => x.IdUsuario == _id).ToList();
+            List<Solicitud> totalSolicitudes = new List<Solicitud>();
+
+            miembroProyecto.ForEach(miembro => {
+                var solicitudes = context.Solicitud
+                                  .Include(x => x.IdElementoConfiguracionNavigation.IdLineaBaseNavigation.IdProyectoNavigation.IdMetodologiaNavigation)
+                                  .Include(x => x.IdElementoConfiguracionNavigation.IdLineaBaseNavigation.IdEntregableNavigation.IdFaseMetodologiaNavigation.IdMetodologiaNavigation)
+                                  .Include(x => x.IdMiembroProyectoNavigation.IdCargoNavigation)
+                                  .Include(x => x.IdMiembroProyectoNavigation.IdProyectoNavigation)
+                                  .Include(x => x.IdMiembroProyectoNavigation.IdUsuarioNavigation)
+                                  .Where(x => x.IdMiembroProyectoNavigation.IdProyecto == miembro.IdProyecto)
+                                  .ToList();
+                solicitudes.ForEach(solicitud => {
+                    totalSolicitudes.Add(solicitud);
+                });
+            });
+
+            totalSolicitudes = totalSolicitudes.Distinct().ToList();
+
+            
+            return totalSolicitudes;
         };
 
         private static Func<int, List<Entregable>> getEntregablesByUser = (int _id) => {
