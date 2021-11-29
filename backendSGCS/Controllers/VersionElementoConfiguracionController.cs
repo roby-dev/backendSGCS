@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using backendSGCS.Models;
+using backendSGCS.Helpers;
 
 namespace backendSGCS.Controllers
 {
@@ -25,6 +26,66 @@ namespace backendSGCS.Controllers
         public async Task<ActionResult<IEnumerable<VersionElementoConfiguracion>>> GetVersionElementoConfiguracion()
         {
             return await _context.VersionElementoConfiguracion.ToListAsync();
+        }
+
+        [HttpGet("proyectos/usuario/{id:int:required}")]
+        public ActionResult<IEnumerable<VersionElementoConfiguracion>> getVersionesByProjectByUser(int id) {
+            List<VersionElementoConfiguracion> versionesByProject = new List<VersionElementoConfiguracion>();
+            var miembroProyecto = _context.MiembroProyecto
+                                                .Include(x=>x.IdProyectoNavigation)                                                
+                                                .Include(x=>x.IdCargoNavigation)
+                                                .Where(x=>x.IdUsuario==id)
+                                                .ToList();     
+
+            if(miembroProyecto.Count == 0) {
+                return NotFound(MessageHelper.createMessage(false, "No se encontraron proyectos para este usuario"));
+            }
+
+            miembroProyecto.ForEach(miembro => {
+                var versiones = _context.VersionElementoConfiguracion
+                                               .Include(x => x.IdSolicitudNavigation.IdElementoConfiguracionNavigation.IdLineaBaseNavigation.IdProyectoNavigation.IdMetodologiaNavigation)
+                                               .Include(x => x.IdSolicitudNavigation.IdElementoConfiguracionNavigation.IdLineaBaseNavigation.IdEntregableNavigation.IdFaseMetodologiaNavigation.IdMetodologiaNavigation)
+                                               .Include(x => x.IdSolicitudNavigation.IdMiembroProyectoNavigation.IdUsuarioNavigation)
+                                               .Include(x => x.IdSolicitudNavigation.IdMiembroProyectoNavigation.IdProyectoNavigation)
+                                               .Include(x => x.IdSolicitudNavigation.IdMiembroProyectoNavigation.IdCargoNavigation)
+                                               .Where(x => x.IdSolicitudNavigation.IdMiembroProyectoNavigation.IdProyecto == miembro.IdProyecto)
+                                               .ToList();
+                if(versiones.Count != 0) {
+                    versiones.ForEach(version => {
+                        versionesByProject.Add(version);
+                    });
+                }                
+            });
+
+            versionesByProject = versionesByProject.Distinct().ToList();
+
+            if (versionesByProject.Count == 0) {
+                return NotFound(MessageHelper.createMessage(false, "No se encontraron versiones relacionadas para este usuario"));
+            }
+
+            return Ok(versionesByProject);
+        }
+
+
+        [HttpGet("usuario/{id:int:required}")]
+        public async Task<ActionResult<IEnumerable<VersionElementoConfiguracion>>> getVersionesByUser(int id) {
+            List<VersionElementoConfiguracion> versionesByUser = new List<VersionElementoConfiguracion>();
+         
+           
+            versionesByUser = await _context.VersionElementoConfiguracion
+                                            .Include(x => x.IdSolicitudNavigation.IdElementoConfiguracionNavigation.IdLineaBaseNavigation.IdProyectoNavigation.IdMetodologiaNavigation)
+                                            .Include(x => x.IdSolicitudNavigation.IdElementoConfiguracionNavigation.IdLineaBaseNavigation.IdEntregableNavigation.IdFaseMetodologiaNavigation.IdMetodologiaNavigation)
+                                            .Include(x => x.IdSolicitudNavigation.IdMiembroProyectoNavigation.IdUsuarioNavigation)
+                                            .Include(x => x.IdSolicitudNavigation.IdMiembroProyectoNavigation.IdProyectoNavigation)
+                                            .Include(x => x.IdSolicitudNavigation.IdMiembroProyectoNavigation.IdCargoNavigation)
+                                            .Where(x => x.IdSolicitudNavigation.IdMiembroProyectoNavigation.IdUsuario == id)
+                                            .ToListAsync();                       
+
+            if (versionesByUser.Count == 0) {
+                return NotFound(MessageHelper.createMessage(false, "No se encontraron versiones de este usuario"));
+            }
+
+            return Ok(versionesByUser);
         }
 
         // GET: api/VersionElementoConfiguracion/5

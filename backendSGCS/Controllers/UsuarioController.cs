@@ -66,7 +66,7 @@ namespace backendSGCS.Controllers {
         }
 
         // DELETE: api/usuarios/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int:required}")]
         public async Task<IActionResult> DeleteUsuario(int id) {
             var usuario = await _context.Usuario.FindAsync(id);
             if (usuario is null) {
