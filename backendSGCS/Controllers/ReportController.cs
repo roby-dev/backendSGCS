@@ -33,6 +33,7 @@ namespace backendSGCS.Controllers {
                 Result.cantidadSolicitud = getSolicitudByProjectsByUser(_usuario.IdUsuario).Count;
                 Result.cantidadMiembroProyecto = getMembersByUser(_usuario.IdUsuario).Count;
                 if (_usuario.Rol == "USER") {
+                    Result.cantidadSolicitud = getSolicitudByProjectsByUser(_usuario.IdUsuario).Where(x=>x.IdMiembroProyectoNavigation.IdUsuario==_usuario.IdUsuario).ToList().Count;
                     Result.cantidadCargo = 0;
                     Result.cantidadEntregable = 0;
                     Result.cantidadElementoConfiguracion = 0;
