@@ -83,6 +83,53 @@ namespace backendSGCS.Controllers {
             }
         };
 
+        public static Func<int, IResult> getMembersByUser = (int _id) => {
+            try
+            {
+                dbSGCSContext context = new dbSGCSContext();
+                var projects = context.MiembroProyecto.Include("IdCargoNavigation")
+                                                      .Include("IdProyectoNavigation.IdMetodologiaNavigation")
+                                                      .Include("IdUsuarioNavigation")
+                                                      .Where(x => x.IdUsuario == _id)
+                                                      .Select(x => x.IdProyectoNavigation)
+                                                      .ToList();
+                if (projects.Count == 0)
+                {
+                    return Results.NotFound(MessageHelper.createMessage(false, "No se encontraron proyectos para ese usuario"));
+                }
+
+                List<MiembroProyecto> miembrosByUser = new List<MiembroProyecto>();
+
+                projects.ForEach(project =>
+                {
+                    var miembros = context.MiembroProyecto.Include(x => x.IdCargoNavigation)
+                                                      .Include(x => x.IdProyectoNavigation.IdMetodologiaNavigation)
+                                                      .Include(x => x.IdUsuarioNavigation)
+                                                      .Where(x => x.IdProyecto == project.IdProyecto)
+                                                      .ToList();
+                    if (miembros.Count != 0)
+                    {
+                        miembros.ForEach(miembro =>
+                        {
+                            miembrosByUser.Add(miembro);
+                        });
+                    }
+                });
+
+                miembrosByUser = miembrosByUser.Distinct().ToList();
+                if(miembrosByUser.Count == 0)
+                {
+                    return Results.NotFound(MessageHelper.createMessage(false, "No se encontrar miembros relacionados a este usuario"));
+                }
+
+                return Results.Ok(miembrosByUser);
+            }
+            catch (Exception)
+            {
+                return Results.NotFound(MessageHelper.createMessage(false, "Error interno"));
+            }
+        };
+
         public static Func<int, MiembroProyecto, Task<IResult>> updateMember = async (int id, MiembroProyecto _miembro) => {          
             try {
                 dbSGCSContext context = new dbSGCSContext();
