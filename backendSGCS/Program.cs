@@ -126,6 +126,7 @@ app.MapPut("/api/proyectos/{id:int}", async ([FromRoute] int id,
 app.MapGet("/api/solicitudes", SolicitudController.getSolicituds);
 app.MapGet("/api/solicitudes/{id:int}", (int id) => SolicitudController.getSolicitudById(id));
 app.MapGet("/api/solicitudes/usuario/{id:int}", (int id) => SolicitudController.getSolicitudByUser(id));
+app.MapGet("/api/solicitudes/proyectos/usuario/{id:int}", (int id) => SolicitudController.getSolicitudByProjectsByUser(id));
 app.MapPost("/api/solicitudes", (Solicitud _solicitud) => SolicitudController.createSolicitud(_solicitud));
 app.MapDelete("/api/solicitudes/{id:int}", (int id) => SolicitudController.deleteSolicitud(id));
 app.MapPut("/api/solicitudes/{id:int}", async ([FromRoute] int id,

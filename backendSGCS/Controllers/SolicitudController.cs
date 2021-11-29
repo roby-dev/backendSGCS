@@ -58,6 +58,34 @@ namespace backendSGCS.Controllers {
             return Results.Ok(solicitudes);
         };
 
+        public static Func<int, IResult> getSolicitudByProjectsByUser = (int _id) => {
+            dbSGCSContext context = new dbSGCSContext();
+
+            var miembroProyecto = context.MiembroProyecto.Include(X => X.IdProyectoNavigation).Include(X => X.IdUsuarioNavigation).Where(x => x.IdUsuario == _id).ToList();
+            List<Solicitud> totalSolicitudes = new List<Solicitud>();
+
+            miembroProyecto.ForEach(miembro => {
+                var solicitudes = context.Solicitud
+                                  .Include(x => x.IdElementoConfiguracionNavigation.IdLineaBaseNavigation.IdProyectoNavigation.IdMetodologiaNavigation)
+                                  .Include(x => x.IdElementoConfiguracionNavigation.IdLineaBaseNavigation.IdEntregableNavigation.IdFaseMetodologiaNavigation.IdMetodologiaNavigation)
+                                  .Include(x => x.IdMiembroProyectoNavigation.IdCargoNavigation)
+                                  .Include(x => x.IdMiembroProyectoNavigation.IdProyectoNavigation)
+                                  .Include(x => x.IdMiembroProyectoNavigation.IdUsuarioNavigation)
+                                  .Where(x => x.IdMiembroProyectoNavigation.IdProyecto == miembro.IdProyecto)
+                                  .ToList();
+                solicitudes.ForEach(solicitud => {
+                    totalSolicitudes.Add(solicitud);
+                });
+            });
+
+            totalSolicitudes = totalSolicitudes.Distinct().ToList();
+
+            if (totalSolicitudes.Count == 0) {
+                return Results.NotFound(MessageHelper.createMessage(false, "No se encontraron solicituds para ese usuario"));
+            }
+            return Results.Ok(totalSolicitudes);
+        };
+
         public static Func<int, IResult> deleteSolicitud = (int _id) => {
             dbSGCSContext context = new dbSGCSContext();
             var solicitud = context.Solicitud.Find(_id);

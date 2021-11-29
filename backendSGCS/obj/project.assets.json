@@ -9925,20 +9925,28 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Nare\\.nuget\\packages\\": {}
+    "C:\\Users\\ROBY\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
+    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Gerson\\Desarrollo\\SGCS - Backend\\backendSGCS\\backendSGCS.csproj",
+      "projectUniqueName": "C:\\Users\\ROBY\\source\\repos\\Nueva carpeta (2)\\backendSGCS\\backendSGCS\\backendSGCS.csproj",
       "projectName": "backendSGCS",
-      "projectPath": "D:\\Gerson\\Desarrollo\\SGCS - Backend\\backendSGCS\\backendSGCS.csproj",
-      "packagesPath": "C:\\Users\\Nare\\.nuget\\packages\\",
-      "outputPath": "D:\\Gerson\\Desarrollo\\SGCS - Backend\\backendSGCS\\obj\\",
+      "projectPath": "C:\\Users\\ROBY\\source\\repos\\Nueva carpeta (2)\\backendSGCS\\backendSGCS\\backendSGCS.csproj",
+      "packagesPath": "C:\\Users\\ROBY\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ROBY\\source\\repos\\Nueva carpeta (2)\\backendSGCS\\backendSGCS\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
+      ],
       "configFilePaths": [
-        "C:\\Users\\Nare\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\ROBY\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
