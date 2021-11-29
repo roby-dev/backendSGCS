@@ -25,7 +25,13 @@ namespace backendSGCS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<VersionElementoConfiguracion>>> GetVersionElementoConfiguracion()
         {
-            return await _context.VersionElementoConfiguracion.ToListAsync();
+            return await _context.VersionElementoConfiguracion
+                                 .Include(x => x.IdSolicitudNavigation.IdElementoConfiguracionNavigation.IdLineaBaseNavigation.IdProyectoNavigation.IdMetodologiaNavigation)
+                                 .Include(x => x.IdSolicitudNavigation.IdElementoConfiguracionNavigation.IdLineaBaseNavigation.IdEntregableNavigation.IdFaseMetodologiaNavigation.IdMetodologiaNavigation)
+                                 .Include(x => x.IdSolicitudNavigation.IdMiembroProyectoNavigation.IdUsuarioNavigation)
+                                 .Include(x => x.IdSolicitudNavigation.IdMiembroProyectoNavigation.IdProyectoNavigation)
+                                 .Include(x => x.IdSolicitudNavigation.IdMiembroProyectoNavigation.IdCargoNavigation)
+                                 .ToListAsync();
         }
 
         [HttpGet("proyectos/usuario/{id:int:required}")]
@@ -92,7 +98,14 @@ namespace backendSGCS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<VersionElementoConfiguracion>> GetVersionElementoConfiguracion(int id)
         {
-            var versionElementoConfiguracion = await _context.VersionElementoConfiguracion.FindAsync(id);
+            var versionElementoConfiguracion = await _context.VersionElementoConfiguracion
+                                 .Include(x => x.IdSolicitudNavigation.IdElementoConfiguracionNavigation.IdLineaBaseNavigation.IdProyectoNavigation.IdMetodologiaNavigation)
+                                 .Include(x => x.IdSolicitudNavigation.IdElementoConfiguracionNavigation.IdLineaBaseNavigation.IdEntregableNavigation.IdFaseMetodologiaNavigation.IdMetodologiaNavigation)
+                                 .Include(x => x.IdSolicitudNavigation.IdMiembroProyectoNavigation.IdUsuarioNavigation)
+                                 .Include(x => x.IdSolicitudNavigation.IdMiembroProyectoNavigation.IdProyectoNavigation)
+                                 .Include(x => x.IdSolicitudNavigation.IdMiembroProyectoNavigation.IdCargoNavigation)
+                                 .Where(x=>x.IdVersion==id).FirstOrDefaultAsync();
+                                                             
 
             if (versionElementoConfiguracion == null)
             {
